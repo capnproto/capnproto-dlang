@@ -1,8 +1,8 @@
 name "capnproto-dlang"
-description "A minimal D application."
-authors "brix"
-copyright "Copyright © 2017, brix"
-license "proprietary"
+description "Cap'n Proto in pure D"
+authors "Thomas Brix Larsen"
+copyright "Copyright © 2017, Thomas Brix Larsen"
+license "MIT"
 
 configuration "lib" {
 	targetType "library"
