@@ -1,0 +1,34 @@
+name "capnproto-dlang"
+description "A minimal D application."
+authors "brix"
+copyright "Copyright © 2017, brix"
+license "proprietary"
+
+configuration "lib" {
+	targetType "library"
+	excludedSourceFiles "source/capnproto/benchmark/*" "source/samples/*"
+}
+
+configuration "test" {
+	targetName "test"
+	targetType "executable"
+	excludedSourceFiles "source/capnproto/benchmark/*" "source/capnproto/tests/*"
+}
+
+configuration "benchmark-carsales" {
+	targetName "benchmark-carsales"
+	targetType "executable"
+	excludedSourceFiles "source/capnproto/benchmark/CatRank.d" "source/capnproto/benchmark/Eval.d" "source/samples/*" "source/capnproto/tests/*"
+}
+
+configuration "benchmark-catrank" {
+	targetName "benchmark-catrank"
+	targetType "executable"
+	excludedSourceFiles "source/capnproto/benchmark/CarSales.d" "source/capnproto/benchmark/Eval.d" "source/samples/*" "source/capnproto/tests/*"
+}
+
+configuration "benchmark-eval" {
+	targetName "benchmark-eval"
+	targetType "executable"
+	excludedSourceFiles "source/capnproto/benchmark/CatRank.d" "source/capnproto/benchmark/CarSales.d" "source/samples/*" "source/capnproto/tests/*"
+}
