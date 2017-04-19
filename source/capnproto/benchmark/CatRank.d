@@ -47,6 +47,8 @@ public: //Types.
 public: //Methods.
 	override int setupRequest(SearchResultList.Builder request)
 	{
+		import std.array : appender;
+		
 		int count = fastRand(1000);
 		int goodCount = 0;
 		
@@ -71,9 +73,8 @@ public: //Methods.
 			bool isDog = fastRand(8) == 0;
 			goodCount += isCat && !isDog;
 			
-			static char[] snippet;
-			snippet.length = 0;
-			snippet.assumeSafeAppend();
+			static snippet = appender!(char[]);
+			snippet.clear();
 			snippet ~= " ";
 			
 			int prefix = fastRand(20);
@@ -88,7 +89,7 @@ public: //Methods.
 			foreach(j; 0..suffix)
 				snippet ~= WORDS[fastRand(cast(uint)WORDS.length)];
 			
-			result.setSnippet(cast(string)snippet);
+			result.setSnippet(cast(string)snippet.data());
 		}
 		
 		return goodCount;
@@ -97,10 +98,11 @@ public: //Methods.
 	override void handleRequest(SearchResultList.Reader request, SearchResultList.Builder response)
 	{
 		import std.algorithm : sort;
+		import std.array : appender;
 		import std.string : indexOf;
 		
-		ScoredResult[] scoredResults;
-		scoredResults.reserve(request.getResults().length);
+		static scoredResults = appender!(ScoredResult[]);
+		scoredResults.clear();
 		
 		foreach(result; request.getResults())
 		{
@@ -113,10 +115,10 @@ public: //Methods.
 			scoredResults ~= ScoredResult(score, result);
 		}
 		
-		scoredResults.sort!((a,b) => a.score > b.score);
+		scoredResults.data().sort!((a,b) => a.score > b.score);
 		
-		auto list = response.initResults(cast(int)scoredResults.length);
-		foreach(i,result; scoredResults)
+		auto list = response.initResults(cast(int)scoredResults.data().length);
+		foreach(i,result; scoredResults.data())
 		{
 			auto item = list.get(i);
 			item.setScore(result.score);

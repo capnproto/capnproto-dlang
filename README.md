@@ -74,9 +74,9 @@ sys     0m0,002s
 dub build -c benchmark-catrank --compiler ldc --build=release
 
 [capnproto-dlang]$ time ./benchmark-catrank object 0 none 20000
-real    0m15,186s
-user    0m15,114s
-sys     0m0,004s
+real    0m11,171s
+user    0m11,156s
+sys     0m0,003s
 
 [capnproto-c++]$ time ./capnproto-catrank object no-reuse none 20000
 real    0m11,259s
