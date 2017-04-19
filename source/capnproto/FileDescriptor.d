@@ -50,6 +50,6 @@ public: //Methods.
 		return src.limit;
 	}
 
-private: //Varibales.
+private: //Variables.
 	File file;
 }

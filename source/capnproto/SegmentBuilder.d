@@ -30,7 +30,7 @@ import capnproto.SegmentReader;
 
 struct SegmentBuilder
 {
-public: //Varibales.
+public: //Variables.
 	static int FAILED_ALLOCATION = -1;
 	
 	size_t pos = 0; //In words.

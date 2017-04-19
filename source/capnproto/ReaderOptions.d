@@ -23,7 +23,7 @@ module capnproto.ReaderOptions;
 
 struct ReaderOptions
 {
-public: //Varibales.
+public: //Variables.
 	static immutable ReaderOptions DEFAULT_READER_OPTIONS = cast(immutable ReaderOptions)ReaderOptions(DEFAULT_TRAVERSAL_LIMIT_IN_WORDS, DEFAULT_NESTING_LIMIT);
 	long traversalLimitInWords;
 	int nestingLimit;
