@@ -21,20 +21,20 @@
 
 using Cxx = import "/capnp/c++.capnp";
 using Dlang = import "/capnp/dlang.capnp";
-using Java = import "/capnp/java.capnp";
+#using Java = import "/capnp/java.capnp";
 
 @0x82beb8e37ff79aba;
 $Cxx.namespace("capnp::benchmark::capnp");
-$Dlang.module("catrankschema");
-$Java.package("org.capnproto.benchmark");
-$Java.outerClassname("CatRankSchema");
+$Dlang.module("capnproto.benchmark.catrankschema");
+#$Java.package("org.capnproto.benchmark");
+#$Java.outerClassname("CatRankSchema");
 
 struct SearchResultList {
-  results@0: List(SearchResult);
+	results @0 :List(SearchResult);
 }
 
 struct SearchResult {
-  url@0: Text;
-  score@1: Float64;
-  snippet@2: Text;
+	url @0 :Text;
+	score @1 :Float64;
+	snippet @2 :Text;
 }

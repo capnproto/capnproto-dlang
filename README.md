@@ -57,9 +57,9 @@ A full example including pregenerated D code from schema is available [here](htt
 dub build -c benchmark-carsales --compiler ldc --build=release
 
 [capnproto-dlang]$ time ./benchmark-carsales object 0 none 20000
-real    0m0,643s
-user    0m0,612s
-sys     0m0,030s
+real    0m0,565s
+user    0m0,533s
+sys     0m0,032s
 
 [capnproto-c++]$ time ./capnproto-carsales object no-reuse none 20000
 real    0m0,410s
@@ -70,4 +70,39 @@ sys     0m0,001s
 real    0m0,350s
 user    0m0,346s
 sys     0m0,002s
+
+dub build -c benchmark-catrank --compiler ldc --build=release
+
+[capnproto-dlang]$ time ./benchmark-catrank object 0 none 20000
+real    0m15,186s
+user    0m15,114s
+sys     0m0,004s
+
+[capnproto-c++]$ time ./capnproto-catrank object no-reuse none 20000
+real    0m11,259s
+user    0m10,789s
+sys     0m0,422s
+
+[capnproto-c++]$ time ./capnproto-catrank object reuse none 20000
+real    0m10,287s
+user    0m10,251s
+sys     0m0,003s
+
+dub build -c benchmark-eval --compiler ldc --build=release
+
+[capnproto-dlang]$ time ./benchmark-eval object 0 none 20000
+real    0m0,130s
+user    0m0,124s
+sys     0m0,005s
+
+[capnproto-c++]$ time ./capnproto-eval object no-reuse none 20000
+real    0m0,191s
+user    0m0,189s
+sys     0m0,002s
+
+[capnproto-c++]$ time ./capnproto-eval object reuse none 20000
+real    0m0,185s
+user    0m0,183s
+sys     0m0,001s
+
 ```

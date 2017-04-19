@@ -21,122 +21,120 @@
 
 module capnproto.benchmark.CatRank;
 
-import capnproto.MessageBuilder;
 import capnproto.StructList;
 import capnproto.Text;
-import capnproto.benchmark.CatRankSchema;
 
-class CarSales : TestCase!(SearchResultList, SearchResultList, int)
+import capnproto.benchmark.catrankschema;
+import capnproto.benchmark.Common;
+import capnproto.benchmark.TestCase;
+
+void main(string[] args)
 {
-	static class ScoredResult : Comparable!ScoredResult
+	auto testCase = new CatRank();
+	testCase.execute(args);
+}
+
+final class CatRank : TestCase!(SearchResultList, SearchResultList, int)
+{
+public: //Types.
+	struct ScoredResult
 	{
 	public:
 		double score;
 		SearchResult.Reader result;
-	
-	public:
-		this(double score, SearchResult.Reader result)
+	}
+
+public: //Methods.
+	override int setupRequest(SearchResultList.Builder request)
+	{
+		int count = fastRand(1000);
+		int goodCount = 0;
+		
+		auto list = request.initResults(count);
+		foreach(i; 0..count)
 		{
-			this.score = score; this.result = result;
+			auto result = list[i];
+			result.setScore(1000 - i);
+			int urlSize = fastRand(100);
+			
+			static Text.Reader URL_PREFIX = "http://example.com";
+			auto urlPrefixLength = URL_PREFIX.length;
+			auto url = result.initUrl(cast(int)(urlSize + urlPrefixLength));
+			auto bytes = url.asByteBuffer();
+			auto bb = URL_PREFIX.asByteBuffer();
+			bytes.put(bb);
+			
+			foreach(j; 0..urlSize)
+				bytes.put(cast(byte)(97 + fastRand(26)));
+			
+			bool isCat = fastRand(8) == 0;
+			bool isDog = fastRand(8) == 0;
+			goodCount += isCat && !isDog;
+			
+			static char[] snippet;
+			snippet.length = 0;
+			snippet.assumeSafeAppend();
+			snippet ~= " ";
+			
+			int prefix = fastRand(20);
+			foreach(j; 0..prefix)
+				snippet ~= WORDS[fastRand(cast(uint)WORDS.length)];
+			if(isCat)
+				snippet ~= "cat ";
+			if(isDog)
+				snippet ~= "dog ";
+			
+			int suffix = fastRand(20);
+			foreach(j; 0..suffix)
+				snippet ~= WORDS[fastRand(cast(uint)WORDS.length)];
+			
+			result.setSnippet(cast(string)snippet);
 		}
 		
-		// decreasing order
-		int compareTo(ScoredResult other)
-		{
-			if(this.score < other.score)
-				return 1;
-			return -1;
-		}
-	}
-	
-	static final Text.Reader URL_PREFIX = new Text.Reader("http://example.com");
-	
-	public Integer setupRequest(Common.FastRand rng, SearchResultList.Builder request) {
-		int count = rng.nextLessThan(1000);
-		int goodCount = 0;
-
-		StructList.Builder<SearchResult.Builder> list = request.initResults(count);
-		for (int i = 0; i < list.size(); ++i) {
-			SearchResult.Builder result = list.get(i);
-			result.setScore(1000.0 - (double)i);
-			int urlSize = rng.nextLessThan(100);
-
-			int urlPrefixLength = URL_PREFIX.size();
-			Text.Builder url = result.initUrl(urlSize + urlPrefixLength);
-			java.nio.ByteBuffer bytes = url.asByteBuffer();
-			bytes.put(URL_PREFIX.asByteBuffer());
-
-			for (int j = 0; j < urlSize; j++) {
-				bytes.put((byte) (97 + rng.nextLessThan(26)));
-			}
-
-			boolean isCat = rng.nextLessThan(8) == 0;
-			boolean isDog = rng.nextLessThan(8) == 0;
-			if (isCat && !isDog) {
-				goodCount += 1;
-			}
-
-			StringBuilder snippet = new StringBuilder(" ");
-
-			int prefix = rng.nextLessThan(20);
-			for (int j = 0; j < prefix; ++j) {
-				snippet.append(Common.WORDS[rng.nextLessThan(Common.WORDS.length)]);
-			}
-			if (isCat) { snippet.append("cat "); }
-			if (isDog) { snippet.append("dog "); }
-
-			int suffix = rng.nextLessThan(20);
-			for (int j = 0; j < suffix; ++j) {
-				snippet.append(Common.WORDS[rng.nextLessThan(Common.WORDS.length)]);
-			}
-
-			result.setSnippet(snippet.toString());
-		}
-
 		return goodCount;
 	}
-
-	public void handleRequest(SearchResultList.Reader request, SearchResultList.Builder response) {
-		java.util.ArrayList<ScoredResult> scoredResults = new java.util.ArrayList<ScoredResult>();
-
-		for (SearchResult.Reader result : request.getResults()) {
+	
+	override void handleRequest(SearchResultList.Reader request, SearchResultList.Builder response)
+	{
+		import std.algorithm : sort;
+		import std.string : indexOf;
+		
+		ScoredResult[] scoredResults;
+		scoredResults.reserve(request.getResults().length);
+		
+		foreach(result; request.getResults())
+		{
 			double score = result.getScore();
-			if (result.getSnippet().toString().contains(" cat ")) {
-				score *= 10000.0;
-			}
-			if (result.getSnippet().toString().contains(" dog ")) {
-				score /= 10000.0;
-			}
-			scoredResults.add(new ScoredResult(score, result));
+			auto snippet = result.getSnippet();
+			if(snippet.indexOf(" cat ") != -1)
+				score *= 10000;
+			if(snippet.indexOf(" dog ") != -1)
+				score /= 10000;
+			scoredResults ~= ScoredResult(score, result);
 		}
-
-		java.util.Collections.sort(scoredResults);
-
-		StructList.Builder<SearchResult.Builder> list = response.initResults(scoredResults.size());
-		for (int i = 0; i < list.size(); ++i) {
-			SearchResult.Builder item = list.get(i);
-			ScoredResult result = scoredResults.get(i);
+		
+		scoredResults.sort!((a,b) => a.score > b.score);
+		
+		auto list = response.initResults(cast(int)scoredResults.length);
+		foreach(i,result; scoredResults)
+		{
+			auto item = list.get(i);
 			item.setScore(result.score);
 			item.setUrl(result.result.getUrl());
 			item.setSnippet(result.result.getSnippet());
 		}
 	}
-
-	public boolean checkResponse(SearchResultList.Reader response, Integer expectedGoodCount) {
+	
+	override bool checkResponse(SearchResultList.Reader response, int expectedGoodCount)
+	{
 		int goodCount = 0;
-		for (SearchResult.Reader result : response.getResults()) {
-			if (result.getScore() > 1001.0) {
-				goodCount += 1;
-			} else {
+		foreach(result; response.getResults())
+		{
+			if(result.getScore() > 1001)
+				++goodCount;
+			else
 				break;
-			}
 		}
 		return goodCount == expectedGoodCount;
 	}
-
-	public static void main(String[] args) {
-		CatRank testCase = new CatRank();
-		testCase.execute(args, SearchResultList.factory, SearchResultList.factory);
-	}
-
 }

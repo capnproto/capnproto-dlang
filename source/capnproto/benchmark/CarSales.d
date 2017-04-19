@@ -36,15 +36,14 @@ void main(string[] args)
 
 class CarSales : TestCase!(ParkingLot, TotalValue, long)
 {
-public:
-	override long setupRequest(FastRand rng, ParkingLot.Builder request)
+public: //Methods.
+	override long setupRequest(ParkingLot.Builder request)
 	{
 		long result = 0;
-		auto cars = request.initCars(rng.nextLessThan(200));
-		foreach(i; 0..cars.length)
+		auto cars = request.initCars(fastRand(200));
+		foreach(car; cars)
 		{
-			Car.Builder car = cars.get(i);
-			randomCar(rng, car);
+			randomCar(car);
 			result += carValue(car.asReader());
 		}
 		return result;
@@ -63,7 +62,7 @@ public:
 		return response.getAmount() == expected;
 	}
 
-package:
+package: //Methods.
 	static long carValue(Car.Reader car)
 	{
 		long result = 0;
@@ -93,43 +92,44 @@ package:
 		return result;
 	}
 	
-	static Text.Reader[] MAKES = [ Text.Reader("Toyota"), Text.Reader("GM"), Text.Reader("Ford"), Text.Reader("Honda"), Text.Reader("Tesla") ];
-	static Text.Reader[] MODELS = [ Text.Reader("Camry"), Text.Reader("Prius"), Text.Reader("Volt"), Text.Reader("Accord"), Text.Reader("Leaf"), Text.Reader("Model S") ];
-	
-	static void randomCar(FastRand rng, ref Car.Builder car)
+	static void randomCar(ref Car.Builder car)
 	{
-		car.setMake(MAKES[rng.nextLessThan(cast(int)MAKES.length)]);
-		car.setModel(MODELS[rng.nextLessThan(cast(int)MODELS.length)]);
+		car.setMake(MAKES[fastRand(cast(uint)MAKES.length)]);
+		car.setModel(MODELS[fastRand(cast(uint)MODELS.length)]);
 		
-		car.setColor(cast(Color)rng.nextLessThan(cast(ushort)Color.silver + 1));
-		car.setSeats(cast(byte)(2 + rng.nextLessThan(6)));
-		car.setDoors(cast(byte)(2 + rng.nextLessThan(3)));
+		car.setColor(cast(Color)fastRand(cast(ushort)Color.silver + 1));
+		car.setSeats(cast(byte)(2 + fastRand(6)));
+		car.setDoors(cast(byte)(2 + fastRand(3)));
 		
 		foreach(wheel; car.initWheels(4))
 		{
-			wheel.setDiameter(cast(short)(25 + rng.nextLessThan(15)));
-			wheel.setAirPressure(cast(float)(30.0 + rng.nextDouble(20.0)));
-			wheel.setSnowTires(rng.nextLessThan(16) == 0);
+			wheel.setDiameter(cast(short)(25 + fastRand(15)));
+			wheel.setAirPressure(cast(float)(30.0 + fastRandDouble(20.0)));
+			wheel.setSnowTires(fastRand(16) == 0);
 		}
 		
-		car.setLength(cast(short)(170 + rng.nextLessThan(150)));
-		car.setWidth(cast(short)(48 + rng.nextLessThan(36)));
-		car.setHeight(cast(short)(54 + rng.nextLessThan(48)));
+		car.setLength(cast(short)(170 + fastRand(150)));
+		car.setWidth(cast(short)(48 + fastRand(36)));
+		car.setHeight(cast(short)(54 + fastRand(48)));
 		car.setWeight(cast(int)car.getLength() * cast(int)car.getWidth() * cast(int)car.getHeight() / 200);
 		
 		Engine.Builder engine = car.initEngine();
-		engine.setHorsepower(cast(short)(100 * rng.nextLessThan(400)));
-		engine.setCylinders(cast(byte)(4  + 2 * rng.nextLessThan(3)));
-		engine.setCc(800 + rng.nextLessThan(10000));
+		engine.setHorsepower(cast(short)(100 * fastRand(400)));
+		engine.setCylinders(cast(byte)(4  + 2 * fastRand(3)));
+		engine.setCc(800 + fastRand(10000));
 		engine.setUsesGas(true);
-		engine.setUsesElectric(rng.nextLessThan(2) == 1);
+		engine.setUsesElectric(fastRand(2) == 1);
 		
-		car.setFuelCapacity(cast(float)(10.0 + rng.nextDouble(30.0)));
-		car.setFuelLevel(cast(float)(rng.nextDouble(car.getFuelCapacity())));
-		car.setHasPowerWindows(rng.nextLessThan(2) == 1);
-		car.setHasPowerSteering(rng.nextLessThan(2) == 1);
-		car.setHasCruiseControl(rng.nextLessThan(2) == 1);
-		car.setCupHolders(cast(byte)rng.nextLessThan(12));
-		car.setHasNavSystem(rng.nextLessThan(2) == 1);
+		car.setFuelCapacity(cast(float)(10.0 + fastRandDouble(30.0)));
+		car.setFuelLevel(cast(float)(fastRandDouble(car.getFuelCapacity())));
+		car.setHasPowerWindows(fastRand(2) == 1);
+		car.setHasPowerSteering(fastRand(2) == 1);
+		car.setHasCruiseControl(fastRand(2) == 1);
+		car.setCupHolders(cast(byte)fastRand(12));
+		car.setHasNavSystem(fastRand(2) == 1);
 	}
+
+private: //Variables.
+	static Text.Reader[] MAKES = [ Text.Reader("Toyota"), Text.Reader("GM"), Text.Reader("Ford"), Text.Reader("Honda"), Text.Reader("Tesla") ];
+	static Text.Reader[] MODELS = [ Text.Reader("Camry"), Text.Reader("Prius"), Text.Reader("Volt"), Text.Reader("Accord"), Text.Reader("Leaf"), Text.Reader("Model S") ];
 }

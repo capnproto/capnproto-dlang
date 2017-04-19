@@ -19,95 +19,126 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.capnproto.benchmark;
+module org.capnproto.benchmark.Eval;
 
-import org.capnproto.MessageBuilder;
-import org.capnproto.StructList;
-import org.capnproto.Text;
-import org.capnproto.benchmark.EvalSchema.*;
+import capnproto.StructList;
+import capnproto.Text;
 
-public class Eval
-    extends TestCase<Expression.Factory, Expression.Builder, Expression.Reader,
-    EvaluationResult.Factory, EvaluationResult.Builder, EvaluationResult.Reader, Integer> {
+import capnproto.benchmark.evalschema;
+import capnproto.benchmark.Common;
+import capnproto.benchmark.TestCase;
 
-    static final Operation operations[] = Operation.values();
+void main(string[] args)
+{
+	auto testCase = new Eval();
+	testCase.execute(args);
+}
 
-    public static int makeExpression(Common.FastRand rng, Expression.Builder exp, int depth) {
-        exp.setOp(operations[rng.nextLessThan(Operation.MODULUS.ordinal() + 1)]);
+class Eval : TestCase!(Expression, EvaluationResult, int)
+{
+public: //Methods.
+	static int makeExpression(Expression.Builder exp, int depth)
+	{
+		exp.setOp(operations[fastRand(Operation.modulus + 1)]);
+		
+		int left = 0;
+		if(fastRand(8) < depth)
+		{
+			int tmp = fastRand(128) + 1;
+			exp.getLeft().setValue(tmp);
+			left = tmp;
+		}
+		else
+			left = makeExpression(exp.getLeft().initExpression(), depth + 1);
+		
+		int right = 0;
+		if(fastRand(8) < depth)
+		{
+			int tmp = fastRand(128) + 1;
+			exp.getRight().setValue(tmp);
+			right = tmp;
+		}
+		else
+			right = makeExpression(exp.getRight().initExpression(), depth + 1);
+		
+		switch(exp.getOp())
+		{
+			case Operation.add:
+				return left + right;
+			case Operation.subtract:
+				return left - right;
+			case Operation.multiply:
+				return left * right;
+			case Operation.divide:
+				return div(left, right);
+			case Operation.modulus:
+				return mod(left, right);
+			default:
+				throw new Error("impossible");
+		}
+	}
+	
+	static int evaluateExpression(Expression.Reader exp)
+	{
+		int left = 0, right = 0;
+		
+		switch(exp.getLeft().which())
+		{
+			case Expression.Left.Which.value:
+				left = exp.getLeft().getValue();
+				break;
+			case Expression.Left.Which.expression:
+				left = evaluateExpression(exp.getLeft().getExpression());
+				break;
+			default:
+				break;
+		}
+		
+		switch(exp.getRight().which())
+		{
+			case Expression.Right.Which.value:
+				right = exp.getRight().getValue();
+				break;
+			case Expression.Right.Which.expression:
+				right = evaluateExpression(exp.getRight().getExpression());
+				break;
+			default:
+				break;
+		}
+		
+		switch(exp.getOp())
+		{
+			case Operation.add:
+				return left + right;
+			case Operation.subtract:
+				return left - right;
+			case Operation.multiply:
+				return left * right;
+			case Operation.divide:
+				return div(left, right);
+			case Operation.modulus:
+				return mod(left, right);
+			default:
+				throw new Error("impossible");
+		}
+	}
+	
+	override int setupRequest(Expression.Builder request)
+	{
+		return makeExpression(request, 0);
+	}
+	
+	override void handleRequest(Expression.Reader request, EvaluationResult.Builder response)
+	{
+		response.setValue(evaluateExpression(request));
+	}
+	
+	override bool checkResponse(EvaluationResult.Reader response, int expected)
+	{
+		return response.getValue() == expected;
+	}
 
-        int left = 0;
-        if (rng.nextLessThan(8) < depth) {
-            int tmp = rng.nextLessThan(128) + 1;
-            exp.getLeft().setValue(tmp);
-            left = tmp;
-        } else {
-            left = makeExpression(rng, exp.getLeft().initExpression(), depth + 1);
-        }
-
-        int right = 0;
-        if (rng.nextLessThan(8) < depth) {
-            int tmp = rng.nextLessThan(128) + 1;
-            exp.getRight().setValue(tmp);
-            right = tmp;
-        } else {
-            right = makeExpression(rng, exp.getRight().initExpression(), depth + 1);
-        }
-
-        switch (exp.getOp()) {
-        case ADD: return left + right;
-        case SUBTRACT: return left - right;
-        case MULTIPLY: return left * right;
-        case DIVIDE: return Common.div(left, right);
-        case MODULUS: return Common.modulus(left, right);
-        default:
-            throw new Error("impossible");
-        }
-    }
-
-    public static int evaluateExpression(Expression.Reader exp) {
-        int left = 0, right = 0;
-
-        switch (exp.getLeft().which()) {
-        case VALUE:
-            left = exp.getLeft().getValue();
-            break;
-        case EXPRESSION:
-            left = evaluateExpression(exp.getLeft().getExpression());
-        }
-
-        switch (exp.getRight().which()) {
-        case VALUE:
-            right = exp.getRight().getValue();
-            break;
-        case EXPRESSION:
-            right = evaluateExpression(exp.getRight().getExpression());
-        }
-
-        switch (exp.getOp()) {
-        case ADD: return left + right;
-        case SUBTRACT: return left - right;
-        case MULTIPLY: return left * right;
-        case DIVIDE: return Common.div(left, right);
-        case MODULUS: return Common.modulus(left, right);
-        default:
-            throw new Error("impossible");
-        }
-    }
-
-    public final Integer setupRequest(Common.FastRand rng, Expression.Builder request) {
-        return makeExpression(rng, request, 0);
-    }
-
-    public final void handleRequest(Expression.Reader request, EvaluationResult.Builder response) {
-        response.setValue(evaluateExpression(request));
-    }
-
-    public final boolean checkResponse(EvaluationResult.Reader response, Integer expected) {
-        return response.getValue() == expected;
-    }
-
-    public static void main(String[] args) {
-        Eval testCase = new Eval();
-        testCase.execute(args, Expression.factory, EvaluationResult.factory);
-    }
+private: //Variables.
+	import std.traits : EnumMembers;
+	static operations = [EnumMembers!Operation];
 }

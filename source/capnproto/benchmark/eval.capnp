@@ -21,36 +21,36 @@
 
 using Cxx = import "/capnp/c++.capnp";
 using Dlang = import "/capnp/dlang.capnp";
-using Java = import "/capnp/java.capnp";
+#using Java = import "/capnp/java.capnp";
 
 @0xe12dc4c3e70e9eda;
 $Cxx.namespace("capnp::benchmark::capnp");
-$Dlang.module("evalschema");
-$Java.package("org.capnproto.benchmark");
-$Java.outerClassname("EvalSchema");
+$Dlang.module("capnproto.benchmark.evalschema");
+#$Java.package("org.capnproto.benchmark");
+#$Java.outerClassname("EvalSchema");
 
 enum Operation {
-  add @0;
-  subtract @1;
-  multiply @2;
-  divide @3;
-  modulus @4;
+	add @0;
+	subtract @1;
+	multiply @2;
+	divide @3;
+	modulus @4;
 }
 
 struct Expression {
-  op@0: Operation;
-
-  left :union {
-    value@1: Int32;
-    expression@2: Expression;
-  }
-
-  right :union {
-    value@3: Int32;
-    expression@4: Expression;
-  }
+	op @0: Operation;
+	
+	left :union {
+		value @1 :Int32;
+		expression @2 :Expression;
+	}
+	
+	right :union {
+		value @3 :Int32;
+		expression @4 :Expression;
+	}
 }
 
 struct EvaluationResult {
-  value@0: Int32;
+	value @0 :Int32;
 }

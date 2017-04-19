@@ -44,20 +44,18 @@ public: //Variables.
 	enum SCRATCH_SIZE = 128 * 1024;
 
 public: //Methods.
-	abstract Expectation setupRequest(FastRand rng, Request.Builder request);
+	abstract Expectation setupRequest(Request.Builder request);
 	abstract void handleRequest(Request.Reader request, Response.Builder response);
 	abstract bool checkResponse(Response.Reader response, Expectation expected);
 	
 	void passByObject(Compression compression, long iters)
 	{
-		auto rng = new FastRand();
-		
 		foreach(ii; 0..iters)
 		{
 			auto requestMessage = new MessageBuilder();
 			auto responseMessage = new MessageBuilder();
 			auto request = requestMessage.initRoot!Request;
-			auto expected = this.setupRequest(rng, request);
+			auto expected = this.setupRequest(request);
 			auto response = responseMessage.initRoot!Response;
 			this.handleRequest(request.asReader(), response);
 			if(!this.checkResponse(response.asReader(), expected))
@@ -69,14 +67,13 @@ public: //Methods.
 	{
 		auto requestBytes = ByteBuffer.allocate(SCRATCH_SIZE * 8);
 		auto responseBytes = ByteBuffer.allocate(SCRATCH_SIZE * 8);
-		auto rng = new FastRand();
 		
 		foreach(ii; 0..iters)
 		{
 			auto requestMessage = new MessageBuilder();
 			auto responseMessage = new MessageBuilder();
 			auto request = requestMessage.initRoot!Request;
-			auto expected = this.setupRequest(rng, request);
+			auto expected = this.setupRequest(request);
 			auto response = responseMessage.initRoot!Response;
 			
 			{
@@ -122,7 +119,6 @@ public: //Methods.
 	
 	void syncClient(Compression compression, long iters)
 	{
-		auto rng = new FastRand();
 		auto outBuffered = new BufferedOutputStreamWrapper(new FileDescriptor(stdout));
 		auto inBuffered = new BufferedInputStreamWrapper(new FileDescriptor(stdin));
 		
@@ -130,7 +126,7 @@ public: //Methods.
 		{
 			auto requestMessage = new MessageBuilder();
 			auto request = requestMessage.initRoot!Request;
-			auto expected = this.setupRequest(rng, request);
+			auto expected = this.setupRequest(request);
 			
 			compression.writeBuffered(outBuffered, requestMessage);
 			auto messageReader = compression.newBufferedReader(inBuffered);
