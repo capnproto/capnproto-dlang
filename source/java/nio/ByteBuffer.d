@@ -30,6 +30,11 @@ public: //Methods.
 		return ByteBuffer(new ubyte[](size));
 	}
 	
+	static ByteBuffer prepare(size_t size)
+	{
+		return ByteBuffer(null, size, 0);
+	}
+	
 	static ByteBuffer wrap(ubyte[] buffer)
 	{
 		return ByteBuffer(buffer);

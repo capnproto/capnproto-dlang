@@ -45,7 +45,8 @@ public: //Methods.
 			auto r = bc.read(buffer);
 			if(r < 0)
 				throw new IOException("Premature EOF.");
-			//TODO: Check for r == 0?
+			if(r == 0)
+				break;
 		}
 	}
 	
@@ -206,7 +207,7 @@ public: //Methods.
 private: //Methods.
 	static ByteBuffer makeByteBuffer(int bytes)
 	{
-		auto result = ByteBuffer.allocate(bytes);
+		auto result = ByteBuffer.prepare(bytes);
 		result.order(ByteOrder.LITTLE_ENDIAN);
 		//result.mark(); //TODO: Is this used for anything?
 		return result;

@@ -50,7 +50,8 @@ public: //Methods.
 		
 		auto slice = this.buf.slice();
 		slice.limit(size);
-		dst.put(slice);
+		dst.buffer = slice.buffer;
+		dst.position_ += size;
 		
 		this.buf.position(this.buf.position() + size);
 		return size;

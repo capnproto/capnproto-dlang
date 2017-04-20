@@ -27,19 +27,12 @@ public: //Methods.
 	///Reads from fd to dst.
 	size_t read(ref ByteBuffer dst)
 	{
-		ubyte[] buffer;
-		if(file.size() == ulong.max)
-		{
-			foreach(ubyte[] buf; file.byChunk(4096))
-				buffer ~= buf.dup;
-		}
-		else
-		{
-			buffer = new ubyte[](file.size());
-			file.rawRead(buffer);
-		}
-		dst.buffer = buffer;
-		return buffer.length;
+		if(dst.buffer is null)
+			dst.buffer = new ubyte[](dst.remaining);
+		file.rawRead(dst.buffer);
+		dst.position_ = dst.buffer.length;
+		dst.limit = dst.buffer.length;
+		return dst.buffer.length;
 	}
 	
 	///Writes from src to fd.

@@ -37,6 +37,8 @@ public: //Methods.
 	
 	size_t read(ref ByteBuffer outBuf)
 	{
+		if(outBuf.buffer is null)
+			outBuf = ByteBuffer.allocate(outBuf.remaining());
 		auto len = outBuf.remaining();
 		if(len == 0)
 			return 0;
