@@ -51,6 +51,7 @@ public import capnproto.ListBuilder;
 public import capnproto.ListList;
 public import capnproto.ListPointer;
 public import capnproto.ListReader;
+public import capnproto.MemoryMapped;
 public import capnproto.MessageBuilder;
 public import capnproto.MessageReader;
 public import capnproto.PackedInputStream;

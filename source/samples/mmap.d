@@ -1,11 +1,13 @@
-module test;
+module mmap;
 
+import std.mmfile;
 import std.stdio;
 
 import capnproto.FileDescriptor;
+import capnproto.MemoryMapped;
 import capnproto.MessageBuilder;
 import capnproto.MessageReader;
-import capnproto.SerializePacked;
+import capnproto.Serialize;
 import capnproto.StructList;
 import capnproto.Void;
 
@@ -40,12 +42,14 @@ void writeAddressBook()
 	bobPhones.get(1).setType(Person.PhoneNumber.Type.work);
 	bob.getEmployment().setUnemployed();
 	
-	SerializePacked.writeToUnbuffered(new FileDescriptor(stdout), message);
+	auto fd = new FileDescriptor(File("addressBookForMmap.bin", "w"));
+	Serialize.write(fd, message);
+	fd.close();
 }
 
 void printAddressBook()
 {
-	auto message = SerializePacked.readFromUnbuffered(new FileDescriptor(stdin));
+	auto message = Serialize.read(new MemoryMapped(new MmFile("addressBookForMmap.bin")));
 	
 	auto addressbook = message.getRoot!AddressBook;
 	
@@ -94,19 +98,8 @@ void printAddressBook()
 	}
 }
 
-void usage()
-{
-	writeln("usage: addressbook [write | read]");
-}
-
 void main(string[] args)
 {
-	if(args.length < 2)
-		usage();
-	else if(args[1] == "write")
-		writeAddressBook();
-	else if(args[1] == "read")
-		printAddressBook();
-	else
-		usage();
+	writeAddressBook();
+	printAddressBook();
 }

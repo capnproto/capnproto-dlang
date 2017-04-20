@@ -5,244 +5,200 @@ module addressbook;
 
 import capnproto;
 
-static final class Person
+struct Person
 {
 public:
-	static immutable structSize = cast(immutable)new StructSize(1, 4);
+	static immutable structSize = cast(immutable)StructSize(1, 4);
 	
-	static final class Factory : StructFactory!(Builder, Reader)
+	static struct Builder
 	{
 	public:
-		this()
+		this(SegmentBuilder* segment, int data, int pointers, int dataSize, short pointerCount)
 		{
+			b = StructBuilder(segment, data, pointers, dataSize, pointerCount);
 		}
-		Reader constructReader(SegmentReader segment, int data, int pointers, int dataSize, short pointerCount, int nestingLimit)
+		
+		
+		auto asReader()
 		{
-			return new Reader(segment, data, pointers, dataSize, pointerCount, nestingLimit);
-		}
-		Builder constructBuilder(SegmentBuilder segment, int data, int pointers, int dataSize, short pointerCount)
-		{
-			return new Builder(segment, data, pointers, dataSize, pointerCount);
-		}
-		immutable(StructSize) structSize()
-		{
-			return Person.structSize;
-		}
-		override Reader asReader(Builder builder)
-		{
-			return builder.asReader();
-		}
-	}
-	static immutable factory = cast(immutable)new Factory();
-	static immutable listFactory = cast(immutable)new StructList.Factory!(Builder, Reader)(cast(Factory)factory);
-	
-	static final class Builder : StructBuilder
-	{
-	public:
-		this(SegmentBuilder segment, int data, int pointers, int dataSize, short pointerCount)
-		{
-			super(segment, data, pointers, dataSize, pointerCount);
-		}
-		Reader asReader()
-		{
-			return new Reader(segment, data, pointers, dataSize, pointerCount, 0x7fffffff);
+			return b.asReader!Reader();
 		}
 		
 		uint getId()
 		{
-			return _getUintField(0);
+			return b._getUintField(0);
 		}
 		void setId(uint value)
 		{
-			_setUintField(0, value);
+			b._setUintField(0, value);
 		}
 		
 		bool hasName()
 		{
-			return !_pointerFieldIsNull(0);
+			return !b._pointerFieldIsNull(0);
 		}
 		Text.Builder getName()
 		{
-			return _getPointerField!Text(0, null, 0, 0);
+			return b._getPointerField!Text(0, null, 0, 0);
 		}
 		void setName(Text.Reader value)
 		{
-			_setPointerField!Text(0, value);
+			b._setPointerField!Text(0, value);
 		}
 		void setName(string value)
 		{
-			_setPointerField!Text(0, new Text.Reader(value));
+			b._setPointerField!Text(0, Text.Reader(value));
 		}
 		Text.Builder initName(int size)
 		{
-			return _initPointerField!Text(0, size);
+			return b._initPointerField!Text(0, size);
 		}
 		
 		bool hasEmail()
 		{
-			return !_pointerFieldIsNull(1);
+			return !b._pointerFieldIsNull(1);
 		}
 		Text.Builder getEmail()
 		{
-			return _getPointerField!Text(1, null, 0, 0);
+			return b._getPointerField!Text(1, null, 0, 0);
 		}
 		void setEmail(Text.Reader value)
 		{
-			_setPointerField!Text(1, value);
+			b._setPointerField!Text(1, value);
 		}
 		void setEmail(string value)
 		{
-			_setPointerField!Text(1, new Text.Reader(value));
+			b._setPointerField!Text(1, Text.Reader(value));
 		}
 		Text.Builder initEmail(int size)
 		{
-			return _initPointerField!Text(1, size);
+			return b._initPointerField!Text(1, size);
 		}
 		
 		bool hasPhones()
 		{
-			return !_pointerFieldIsNull(2);
+			return !b._pointerFieldIsNull(2);
 		}
-		StructList.Builder!(.Person.PhoneNumber.Builder) getPhones()
+		StructList!(.Person.PhoneNumber).Builder getPhones()
 		{
-			return _getPointerListField!(.Person.PhoneNumber)(2, null, 0);
+			return b._getPointerField!(StructList!(.Person.PhoneNumber))(2, null, 0);
 		}
-		void setPhones(StructList.Reader!(.Person.PhoneNumber.Reader) value)
+		void setPhones(StructList!(.Person.PhoneNumber).Reader value)
 		{
-			_setPointerListField!(.Person.PhoneNumber)(2, value);
+			b._setPointerField!(StructList!(.Person.PhoneNumber))(2, value);
 		}
-		StructList.Builder!(.Person.PhoneNumber.Builder) initPhones(int size)
+		StructList!(.Person.PhoneNumber).Builder initPhones(int size)
 		{
-			return _initPointerListField!(.Person.PhoneNumber)(2, size);
+			return b._initPointerField!(StructList!(.Person.PhoneNumber))(2, size);
 		}
 		
 		Employment.Builder getEmployment()
 		{
-			return new Person.Employment.Builder(segment, data, pointers, dataSize, pointerCount);
+			return Person.Employment.Builder(b.segment, b.data, b.pointers, b.dataSize, b.pointerCount);
 		}
 		Employment.Builder initEmployment()
 		{
-			_setUshortField(2, cast(ushort)0);
-			_clearPointerField(3);
-			return new Person.Employment.Builder(segment, data, pointers, dataSize, pointerCount);
+			b._setUshortField(2, cast(ushort)0);
+			b._clearPointerField(3);
+			return Person.Employment.Builder(b.segment, b.data, b.pointers, b.dataSize, b.pointerCount);
 		}
 		
+	public:
+		StructBuilder b;
 	}
 	
-	static final class Reader : StructReader
+	static struct Reader
 	{
 	public:
-		this(SegmentReader segment, int data, int pointers, int dataSize, short pointerCount, int nestingLimit)
+		this(SegmentReader* segment, int data, int pointers, int dataSize, short pointerCount, int nestingLimit)
 		{
-			super(segment, data, pointers, dataSize, pointerCount, nestingLimit);
+			b = StructReader(segment, data, pointers, dataSize, pointerCount, nestingLimit);
 		}
 		
 		uint getId()
 		{
-			return _getUintField(0);
+			return b._getUintField(0);
 		}
 		
 		bool hasName()
 		{
-			return !_pointerFieldIsNull(0);
+			return !b._pointerFieldIsNull(0);
 		}
 		string getName()
 		{
-			return _getPointerField!Text(0, null, 0, 0).toString();
+			return b._getPointerField!Text(0, null, 0, 0).toString();
 		}
 		
 		bool hasEmail()
 		{
-			return !_pointerFieldIsNull(1);
+			return !b._pointerFieldIsNull(1);
 		}
 		string getEmail()
 		{
-			return _getPointerField!Text(1, null, 0, 0).toString();
+			return b._getPointerField!Text(1, null, 0, 0).toString();
 		}
 		
 		bool hasPhones()
 		{
-			return !_pointerFieldIsNull(2);
+			return !b._pointerFieldIsNull(2);
 		}
-		StructList.Reader!(.Person.PhoneNumber.Reader) getPhones()
+		StructList!(.Person.PhoneNumber).Reader getPhones()
 		{
-			return _getPointerListField!(.Person.PhoneNumber)(2, null, 0);
+			return b._getPointerField!(StructList!(.Person.PhoneNumber))(2, null, 0);
 		}
 		
 		Employment.Reader getEmployment()
 		{
-			return new Person.Employment.Reader(segment, data, pointers, dataSize, pointerCount, nestingLimit);
+			return Person.Employment.Reader(b.segment, b.data, b.pointers, b.dataSize, b.pointerCount, b.nestingLimit);
 		}
 		
+	public:
+		StructReader b;
 	}
 	
-	static final class PhoneNumber
+	struct PhoneNumber
 	{
 	public:
-		static immutable structSize = cast(immutable)new StructSize(1, 1);
+		static immutable structSize = cast(immutable)StructSize(1, 1);
 		
-		static final class Factory : StructFactory!(Builder, Reader)
+		static struct Builder
 		{
 		public:
-			this()
+			this(SegmentBuilder* segment, int data, int pointers, int dataSize, short pointerCount)
 			{
+				b = StructBuilder(segment, data, pointers, dataSize, pointerCount);
 			}
-			Reader constructReader(SegmentReader segment, int data, int pointers, int dataSize, short pointerCount, int nestingLimit)
+			
+			
+			auto asReader()
 			{
-				return new Reader(segment, data, pointers, dataSize, pointerCount, nestingLimit);
-			}
-			Builder constructBuilder(SegmentBuilder segment, int data, int pointers, int dataSize, short pointerCount)
-			{
-				return new Builder(segment, data, pointers, dataSize, pointerCount);
-			}
-			immutable(StructSize) structSize()
-			{
-				return Person.PhoneNumber.structSize;
-			}
-			override Reader asReader(Builder builder)
-			{
-				return builder.asReader();
-			}
-		}
-		static immutable factory = cast(immutable)new Factory();
-		static immutable listFactory = cast(immutable)new StructList.Factory!(Builder, Reader)(cast(Factory)factory);
-		
-		static final class Builder : StructBuilder
-		{
-		public:
-			this(SegmentBuilder segment, int data, int pointers, int dataSize, short pointerCount)
-			{
-				super(segment, data, pointers, dataSize, pointerCount);
-			}
-			Reader asReader()
-			{
-				return new Reader(segment, data, pointers, dataSize, pointerCount, 0x7fffffff);
+				return b.asReader!Reader();
 			}
 			
 			bool hasNumber()
 			{
-				return !_pointerFieldIsNull(0);
+				return !b._pointerFieldIsNull(0);
 			}
 			Text.Builder getNumber()
 			{
-				return _getPointerField!Text(0, null, 0, 0);
+				return b._getPointerField!Text(0, null, 0, 0);
 			}
 			void setNumber(Text.Reader value)
 			{
-				_setPointerField!Text(0, value);
+				b._setPointerField!Text(0, value);
 			}
 			void setNumber(string value)
 			{
-				_setPointerField!Text(0, new Text.Reader(value));
+				b._setPointerField!Text(0, Text.Reader(value));
 			}
 			Text.Builder initNumber(int size)
 			{
-				return _initPointerField!Text(0, size);
+				return b._initPointerField!Text(0, size);
 			}
 			
 			.Person.PhoneNumber.Type getType()
 			{
-				switch(_getUshortField(0))
+				switch(b._getUshortField(0))
 				{
 					case 0: return .Person.PhoneNumber.Type.mobile;
 					case 1: return .Person.PhoneNumber.Type.home;
@@ -252,31 +208,33 @@ public:
 			}
 			void setType(.Person.PhoneNumber.Type value)
 			{
-				_setShortField(0, cast(ushort)value);
+				b._setShortField(0, cast(ushort)value);
 			}
 			
+		public:
+			StructBuilder b;
 		}
 		
-		static final class Reader : StructReader
+		static struct Reader
 		{
 		public:
-			this(SegmentReader segment, int data, int pointers, int dataSize, short pointerCount, int nestingLimit)
+			this(SegmentReader* segment, int data, int pointers, int dataSize, short pointerCount, int nestingLimit)
 			{
-				super(segment, data, pointers, dataSize, pointerCount, nestingLimit);
+				b = StructReader(segment, data, pointers, dataSize, pointerCount, nestingLimit);
 			}
 			
 			bool hasNumber()
 			{
-				return !_pointerFieldIsNull(0);
+				return !b._pointerFieldIsNull(0);
 			}
 			string getNumber()
 			{
-				return _getPointerField!Text(0, null, 0, 0).toString();
+				return b._getPointerField!Text(0, null, 0, 0).toString();
 			}
 			
 			.Person.PhoneNumber.Type getType()
 			{
-				switch(_getUshortField(0))
+				switch(b._getUshortField(0))
 				{
 					case 0: return .Person.PhoneNumber.Type.mobile;
 					case 1: return .Person.PhoneNumber.Type.home;
@@ -285,6 +243,8 @@ public:
 				}
 			}
 			
+		public:
+			StructReader b;
 		}
 		
 		enum Type : ushort
@@ -297,47 +257,22 @@ public:
 		
 	}
 	
-	static final class Employment
+	struct Employment
 	{
 	public:
-		static immutable structSize = cast(immutable)new StructSize(1, 4);
+		static immutable structSize = cast(immutable)StructSize(1, 4);
 		
-		static final class Factory : StructFactory!(Builder, Reader)
+		static struct Builder
 		{
 		public:
-			this()
+			this(SegmentBuilder* segment, int data, int pointers, int dataSize, short pointerCount)
 			{
+				b = StructBuilder(segment, data, pointers, dataSize, pointerCount);
 			}
-			Reader constructReader(SegmentReader segment, int data, int pointers, int dataSize, short pointerCount, int nestingLimit)
-			{
-				return new Reader(segment, data, pointers, dataSize, pointerCount, nestingLimit);
-			}
-			Builder constructBuilder(SegmentBuilder segment, int data, int pointers, int dataSize, short pointerCount)
-			{
-				return new Builder(segment, data, pointers, dataSize, pointerCount);
-			}
-			immutable(StructSize) structSize()
-			{
-				return Person.Employment.structSize;
-			}
-			override Reader asReader(Builder builder)
-			{
-				return builder.asReader();
-			}
-		}
-		static immutable factory = cast(immutable)new Factory();
-		static immutable listFactory = cast(immutable)new StructList.Factory!(Builder, Reader)(cast(Factory)factory);
-		
-		static final class Builder : StructBuilder
-		{
-		public:
-			this(SegmentBuilder segment, int data, int pointers, int dataSize, short pointerCount)
-			{
-				super(segment, data, pointers, dataSize, pointerCount);
-			}
+			
 			Which which()
 			{
-				switch(_getUshortField(2))
+				switch(b._getUshortField(2))
 				{
 					case 0: return Which.unemployed;
 					case 1: return Which.employer;
@@ -347,9 +282,10 @@ public:
 				}
 			}
 			
-			Reader asReader()
+			
+			auto asReader()
 			{
-				return new Reader(segment, data, pointers, dataSize, pointerCount, 0x7fffffff);
+				return b.asReader!Reader();
 			}
 			
 			bool isUnemployed()
@@ -361,9 +297,9 @@ public:
 				assert(which() == Person.Employment.Which.unemployed, "Must check which() before get()ing a union member.");
 				return Void.VOID;
 			}
-			void setUnemployed(Void value)
+			void setUnemployed()
 			{
-				_setShortField(2, cast(ushort)Person.Employment.Which.unemployed);
+				b._setShortField(2, cast(ushort)Person.Employment.Which.unemployed);
 			}
 			
 			bool isEmployer()
@@ -373,26 +309,26 @@ public:
 			bool hasEmployer()
 			{
 				if(which() != Person.Employment.Which.employer) return false;
-				return !_pointerFieldIsNull(3);
+				return !b._pointerFieldIsNull(3);
 			}
 			Text.Builder getEmployer()
 			{
-				return _getPointerField!Text(3, null, 0, 0);
+				return b._getPointerField!Text(3, null, 0, 0);
 			}
 			void setEmployer(Text.Reader value)
 			{
-				_setShortField(2, cast(ushort)Person.Employment.Which.employer);
-				_setPointerField!Text(3, value);
+				b._setShortField(2, cast(ushort)Person.Employment.Which.employer);
+				b._setPointerField!Text(3, value);
 			}
 			void setEmployer(string value)
 			{
-				_setShortField(2, cast(ushort)Person.Employment.Which.employer);
-				_setPointerField!Text(3, new Text.Reader(value));
+				b._setShortField(2, cast(ushort)Person.Employment.Which.employer);
+				b._setPointerField!Text(3, Text.Reader(value));
 			}
 			Text.Builder initEmployer(int size)
 			{
-				_setShortField(2, cast(ushort)Person.Employment.Which.employer);
-				return _initPointerField!Text(3, size);
+				b._setShortField(2, cast(ushort)Person.Employment.Which.employer);
+				return b._initPointerField!Text(3, size);
 			}
 			
 			bool isSchool()
@@ -402,26 +338,26 @@ public:
 			bool hasSchool()
 			{
 				if(which() != Person.Employment.Which.school) return false;
-				return !_pointerFieldIsNull(3);
+				return !b._pointerFieldIsNull(3);
 			}
 			Text.Builder getSchool()
 			{
-				return _getPointerField!Text(3, null, 0, 0);
+				return b._getPointerField!Text(3, null, 0, 0);
 			}
 			void setSchool(Text.Reader value)
 			{
-				_setShortField(2, cast(ushort)Person.Employment.Which.school);
-				_setPointerField!Text(3, value);
+				b._setShortField(2, cast(ushort)Person.Employment.Which.school);
+				b._setPointerField!Text(3, value);
 			}
 			void setSchool(string value)
 			{
-				_setShortField(2, cast(ushort)Person.Employment.Which.school);
-				_setPointerField!Text(3, new Text.Reader(value));
+				b._setShortField(2, cast(ushort)Person.Employment.Which.school);
+				b._setPointerField!Text(3, Text.Reader(value));
 			}
 			Text.Builder initSchool(int size)
 			{
-				_setShortField(2, cast(ushort)Person.Employment.Which.school);
-				return _initPointerField!Text(3, size);
+				b._setShortField(2, cast(ushort)Person.Employment.Which.school);
+				return b._initPointerField!Text(3, size);
 			}
 			
 			bool isSelfEmployed()
@@ -433,24 +369,26 @@ public:
 				assert(which() == Person.Employment.Which.selfEmployed, "Must check which() before get()ing a union member.");
 				return Void.VOID;
 			}
-			void setSelfEmployed(Void value)
+			void setSelfEmployed()
 			{
-				_setShortField(2, cast(ushort)Person.Employment.Which.selfEmployed);
+				b._setShortField(2, cast(ushort)Person.Employment.Which.selfEmployed);
 			}
 			
+		public:
+			StructBuilder b;
 		}
 		
-		static final class Reader : StructReader
+		static struct Reader
 		{
 		public:
-			this(SegmentReader segment, int data, int pointers, int dataSize, short pointerCount, int nestingLimit)
+			this(SegmentReader* segment, int data, int pointers, int dataSize, short pointerCount, int nestingLimit)
 			{
-				super(segment, data, pointers, dataSize, pointerCount, nestingLimit);
+				b = StructReader(segment, data, pointers, dataSize, pointerCount, nestingLimit);
 			}
 			
 			Which which()
 			{
-				switch(_getUshortField(2))
+				switch(b._getUshortField(2))
 				{
 					case 0: return Which.unemployed;
 					case 1: return Which.employer;
@@ -477,11 +415,11 @@ public:
 			bool hasEmployer()
 			{
 				if(which() != Person.Employment.Which.employer) return false;
-				return !_pointerFieldIsNull(3);
+				return !b._pointerFieldIsNull(3);
 			}
 			string getEmployer()
 			{
-				return _getPointerField!Text(3, null, 0, 0).toString();
+				return b._getPointerField!Text(3, null, 0, 0).toString();
 			}
 			
 			bool isSchool()
@@ -491,11 +429,11 @@ public:
 			bool hasSchool()
 			{
 				if(which() != Person.Employment.Which.school) return false;
-				return !_pointerFieldIsNull(3);
+				return !b._pointerFieldIsNull(3);
 			}
 			string getSchool()
 			{
-				return _getPointerField!Text(3, null, 0, 0).toString();
+				return b._getPointerField!Text(3, null, 0, 0).toString();
 			}
 			
 			bool isSelfEmployed()
@@ -508,6 +446,8 @@ public:
 				return Void.VOID;
 			}
 			
+		public:
+			StructReader b;
 		}
 		
 		enum Which : ushort
@@ -522,398 +462,378 @@ public:
 	
 }
 
-static final class AddressBook
+struct AddressBook
 {
 public:
-	static immutable structSize = cast(immutable)new StructSize(0, 1);
+	static immutable structSize = cast(immutable)StructSize(0, 1);
 	
-	static final class Factory : StructFactory!(Builder, Reader)
+	static struct Builder
 	{
 	public:
-		this()
+		this(SegmentBuilder* segment, int data, int pointers, int dataSize, short pointerCount)
 		{
+			b = StructBuilder(segment, data, pointers, dataSize, pointerCount);
 		}
-		Reader constructReader(SegmentReader segment, int data, int pointers, int dataSize, short pointerCount, int nestingLimit)
+		
+		
+		auto asReader()
 		{
-			return new Reader(segment, data, pointers, dataSize, pointerCount, nestingLimit);
-		}
-		Builder constructBuilder(SegmentBuilder segment, int data, int pointers, int dataSize, short pointerCount)
-		{
-			return new Builder(segment, data, pointers, dataSize, pointerCount);
-		}
-		immutable(StructSize) structSize()
-		{
-			return AddressBook.structSize;
-		}
-		override Reader asReader(Builder builder)
-		{
-			return builder.asReader();
-		}
-	}
-	static immutable factory = cast(immutable)new Factory();
-	static immutable listFactory = cast(immutable)new StructList.Factory!(Builder, Reader)(cast(Factory)factory);
-	
-	static final class Builder : StructBuilder
-	{
-	public:
-		this(SegmentBuilder segment, int data, int pointers, int dataSize, short pointerCount)
-		{
-			super(segment, data, pointers, dataSize, pointerCount);
-		}
-		Reader asReader()
-		{
-			return new Reader(segment, data, pointers, dataSize, pointerCount, 0x7fffffff);
+			return b.asReader!Reader();
 		}
 		
 		bool hasPeople()
 		{
-			return !_pointerFieldIsNull(0);
+			return !b._pointerFieldIsNull(0);
 		}
-		StructList.Builder!(.Person.Builder) getPeople()
+		StructList!(.Person).Builder getPeople()
 		{
-			return _getPointerListField!(.Person)(0, null, 0);
+			return b._getPointerField!(StructList!(.Person))(0, null, 0);
 		}
-		void setPeople(StructList.Reader!(.Person.Reader) value)
+		void setPeople(StructList!(.Person).Reader value)
 		{
-			_setPointerListField!(.Person)(0, value);
+			b._setPointerField!(StructList!(.Person))(0, value);
 		}
-		StructList.Builder!(.Person.Builder) initPeople(int size)
+		StructList!(.Person).Builder initPeople(int size)
 		{
-			return _initPointerListField!(.Person)(0, size);
+			return b._initPointerField!(StructList!(.Person))(0, size);
 		}
 		
+	public:
+		StructBuilder b;
 	}
 	
-	static final class Reader : StructReader
+	static struct Reader
 	{
 	public:
-		this(SegmentReader segment, int data, int pointers, int dataSize, short pointerCount, int nestingLimit)
+		this(SegmentReader* segment, int data, int pointers, int dataSize, short pointerCount, int nestingLimit)
 		{
-			super(segment, data, pointers, dataSize, pointerCount, nestingLimit);
+			b = StructReader(segment, data, pointers, dataSize, pointerCount, nestingLimit);
 		}
 		
 		bool hasPeople()
 		{
-			return !_pointerFieldIsNull(0);
+			return !b._pointerFieldIsNull(0);
 		}
-		StructList.Reader!(.Person.Reader) getPeople()
+		StructList!(.Person).Reader getPeople()
 		{
-			return _getPointerListField!(.Person)(0, null, 0);
+			return b._getPointerField!(StructList!(.Person))(0, null, 0);
 		}
 		
+	public:
+		StructReader b;
 	}
 	
 }
 
-final class Schemas
+struct Schemas
 {
 public:
-	__gshared static SegmentReader b_98808e9832e8bc18 = GeneratedClassSupport.decodeRawBytes(
-	  "\u0000\u0000\u0000\u0000\u0005\u0000\u0006\u0000" ~
-	  "\u0018\u00bc\u00e8\u0032\u0098\u008e\u0080\u0098" ~
-	  "\u0012\u0000\u0000\u0000\u0001\u0000\u0001\u0000" ~
-	  "\u0074\u00e1\u006e\u00f8\u0019\u002e\u00b3\u009e" ~
-	  "\u0004\u0000\u0007\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0015\u0000\u0000\u0000\u00ca\u0000\u0000\u0000" ~
-	  "\u0021\u0000\u0000\u0000\u0017\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u002d\u0000\u0000\u0000\u001f\u0001\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0061\u0064\u0064\u0072\u0065\u0073\u0073\u0062" ~
-	  "\u006f\u006f\u006b\u002e\u0063\u0061\u0070\u006e" ~
-	  "\u0070\u003a\u0050\u0065\u0072\u0073\u006f\u006e" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0004\u0000\u0000\u0000\u0001\u0000\u0001\u0000" ~
-	  "\u00d0\u008a\u009e\u009c\u00b2\u0090\u004e\u0081" ~
-	  "\u0001\u0000\u0000\u0000\u0062\u0000\u0000\u0000" ~
-	  "\u0050\u0068\u006f\u006e\u0065\u004e\u0075\u006d" ~
-	  "\u0062\u0065\u0072\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0014\u0000\u0000\u0000\u0003\u0000\u0004\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0001\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u007d\u0000\u0000\u0000\u001a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0078\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u0084\u0000\u0000\u0000\u0002\u0000\u0001\u0000" ~
-	  "\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0001\u0000\u0001\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0081\u0000\u0000\u0000\u002a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u007c\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u0088\u0000\u0000\u0000\u0002\u0000\u0001\u0000" ~
-	  "\u0002\u0000\u0000\u0000\u0001\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0001\u0000\u0002\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0085\u0000\u0000\u0000\u0032\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0080\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u008c\u0000\u0000\u0000\u0002\u0000\u0001\u0000" ~
-	  "\u0003\u0000\u0000\u0000\u0002\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0001\u0000\u0003\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0089\u0000\u0000\u0000\u003a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0084\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u00a0\u0000\u0000\u0000\u0002\u0000\u0001\u0000" ~
-	  "\u0004\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u003d\u0069\u00c3\u00bd\u00d4\u002b\u000b\u00bb" ~
-	  "\u009d\u0000\u0000\u0000\u005a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0069\u0064\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0008\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0008\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u006e\u0061\u006d\u0065\u0000\u0000\u0000\u0000" ~
-	  "\u000c\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u000c\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0065\u006d\u0061\u0069\u006c\u0000\u0000\u0000" ~
-	  "\u000c\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u000c\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0070\u0068\u006f\u006e\u0065\u0073\u0000\u0000" ~
-	  "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u00d0\u008a\u009e\u009c\u00b2\u0090\u004e\u0081" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0065\u006d\u0070\u006c\u006f\u0079\u006d\u0065" ~
-	  "\u006e\u0074\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "");
-	__gshared static SegmentReader b_814e90b29c9e8ad0 = GeneratedClassSupport.decodeRawBytes(
-	  "\u0000\u0000\u0000\u0000\u0005\u0000\u0006\u0000" ~
-	  "\u00d0\u008a\u009e\u009c\u00b2\u0090\u004e\u0081" ~
-	  "\u0019\u0000\u0000\u0000\u0001\u0000\u0001\u0000" ~
-	  "\u0018\u00bc\u00e8\u0032\u0098\u008e\u0080\u0098" ~
-	  "\u0001\u0000\u0007\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0015\u0000\u0000\u0000\u002a\u0001\u0000\u0000" ~
-	  "\u0025\u0000\u0000\u0000\u0017\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u002d\u0000\u0000\u0000\u0077\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0061\u0064\u0064\u0072\u0065\u0073\u0073\u0062" ~
-	  "\u006f\u006f\u006b\u002e\u0063\u0061\u0070\u006e" ~
-	  "\u0070\u003a\u0050\u0065\u0072\u0073\u006f\u006e" ~
-	  "\u002e\u0050\u0068\u006f\u006e\u0065\u004e\u0075" ~
-	  "\u006d\u0062\u0065\u0072\u0000\u0000\u0000\u0000" ~
-	  "\u0004\u0000\u0000\u0000\u0001\u0000\u0001\u0000" ~
-	  "\u002f\u0006\u0085\u00d5\u0004\u00bd\u00e0\u0091" ~
-	  "\u0001\u0000\u0000\u0000\u002a\u0000\u0000\u0000" ~
-	  "\u0054\u0079\u0070\u0065\u0000\u0000\u0000\u0000" ~
-	  "\u0008\u0000\u0000\u0000\u0003\u0000\u0004\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0001\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0029\u0000\u0000\u0000\u003a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0024\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u0030\u0000\u0000\u0000\u0002\u0000\u0001\u0000" ~
-	  "\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0001\u0000\u0001\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u002d\u0000\u0000\u0000\u002a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0028\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u0034\u0000\u0000\u0000\u0002\u0000\u0001\u0000" ~
-	  "\u006e\u0075\u006d\u0062\u0065\u0072\u0000\u0000" ~
-	  "\u000c\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u000c\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0074\u0079\u0070\u0065\u0000\u0000\u0000\u0000" ~
-	  "\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u002f\u0006\u0085\u00d5\u0004\u00bd\u00e0\u0091" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "");
-	__gshared static SegmentReader b_91e0bd04d585062f = GeneratedClassSupport.decodeRawBytes(
-	  "\u0000\u0000\u0000\u0000\u0005\u0000\u0006\u0000" ~
-	  "\u002f\u0006\u0085\u00d5\u0004\u00bd\u00e0\u0091" ~
-	  "\u0025\u0000\u0000\u0000\u0002\u0000\u0000\u0000" ~
-	  "\u00d0\u008a\u009e\u009c\u00b2\u0090\u004e\u0081" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0015\u0000\u0000\u0000\u0052\u0001\u0000\u0000" ~
-	  "\u0029\u0000\u0000\u0000\u0007\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0025\u0000\u0000\u0000\u004f\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0061\u0064\u0064\u0072\u0065\u0073\u0073\u0062" ~
-	  "\u006f\u006f\u006b\u002e\u0063\u0061\u0070\u006e" ~
-	  "\u0070\u003a\u0050\u0065\u0072\u0073\u006f\u006e" ~
-	  "\u002e\u0050\u0068\u006f\u006e\u0065\u004e\u0075" ~
-	  "\u006d\u0062\u0065\u0072\u002e\u0054\u0079\u0070" ~
-	  "\u0065\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0001\u0000\u0001\u0000" ~
-	  "\u000c\u0000\u0000\u0000\u0001\u0000\u0002\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u001d\u0000\u0000\u0000\u003a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0015\u0000\u0000\u0000\u002a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\r\u0000\u0000\u0000\u002a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u006d\u006f\u0062\u0069\u006c\u0065\u0000\u0000" ~
-	  "\u0068\u006f\u006d\u0065\u0000\u0000\u0000\u0000" ~
-	  "\u0077\u006f\u0072\u006b\u0000\u0000\u0000\u0000" ~
-	  "");
-	__gshared static SegmentReader b_bb0b2bd4bdc3693d = GeneratedClassSupport.decodeRawBytes(
-	  "\u0000\u0000\u0000\u0000\u0005\u0000\u0006\u0000" ~
-	  "\u003d\u0069\u00c3\u00bd\u00d4\u002b\u000b\u00bb" ~
-	  "\u0019\u0000\u0000\u0000\u0001\u0000\u0001\u0000" ~
-	  "\u0018\u00bc\u00e8\u0032\u0098\u008e\u0080\u0098" ~
-	  "\u0004\u0000\u0007\u0000\u0001\u0000\u0004\u0000" ~
-	  "\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0015\u0000\u0000\u0000\"\u0001\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u001d\u0000\u0000\u0000\u00e7\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0061\u0064\u0064\u0072\u0065\u0073\u0073\u0062" ~
-	  "\u006f\u006f\u006b\u002e\u0063\u0061\u0070\u006e" ~
-	  "\u0070\u003a\u0050\u0065\u0072\u0073\u006f\u006e" ~
-	  "\u002e\u0065\u006d\u0070\u006c\u006f\u0079\u006d" ~
-	  "\u0065\u006e\u0074\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0010\u0000\u0000\u0000\u0003\u0000\u0004\u0000" ~
-	  "\u0000\u0000\u00ff\u00ff\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0001\u0000\u0004\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0061\u0000\u0000\u0000\u005a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0060\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u006c\u0000\u0000\u0000\u0002\u0000\u0001\u0000" ~
-	  "\u0001\u0000\u00fe\u00ff\u0003\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0001\u0000\u0005\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0069\u0000\u0000\u0000\u004a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0068\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u0074\u0000\u0000\u0000\u0002\u0000\u0001\u0000" ~
-	  "\u0002\u0000\u00fd\u00ff\u0003\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0001\u0000\u0006\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0071\u0000\u0000\u0000\u003a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u006c\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u0078\u0000\u0000\u0000\u0002\u0000\u0001\u0000" ~
-	  "\u0003\u0000\u00fc\u00ff\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0001\u0000\u0007\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0075\u0000\u0000\u0000\u006a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0074\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u0080\u0000\u0000\u0000\u0002\u0000\u0001\u0000" ~
-	  "\u0075\u006e\u0065\u006d\u0070\u006c\u006f\u0079" ~
-	  "\u0065\u0064\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0065\u006d\u0070\u006c\u006f\u0079\u0065\u0072" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u000c\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u000c\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0073\u0063\u0068\u006f\u006f\u006c\u0000\u0000" ~
-	  "\u000c\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u000c\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0073\u0065\u006c\u0066\u0045\u006d\u0070\u006c" ~
-	  "\u006f\u0079\u0065\u0064\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "");
-	__gshared static SegmentReader b_f934d9b354a8a134 = GeneratedClassSupport.decodeRawBytes(
-	  "\u0000\u0000\u0000\u0000\u0005\u0000\u0006\u0000" ~
-	  "\u0034\u00a1\u00a8\u0054\u00b3\u00d9\u0034\u00f9" ~
-	  "\u0012\u0000\u0000\u0000\u0001\u0000\u0000\u0000" ~
-	  "\u0074\u00e1\u006e\u00f8\u0019\u002e\u00b3\u009e" ~
-	  "\u0001\u0000\u0007\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0015\u0000\u0000\u0000\u00f2\u0000\u0000\u0000" ~
-	  "\u0021\u0000\u0000\u0000\u0007\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u001d\u0000\u0000\u0000\u003f\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0061\u0064\u0064\u0072\u0065\u0073\u0073\u0062" ~
-	  "\u006f\u006f\u006b\u002e\u0063\u0061\u0070\u006e" ~
-	  "\u0070\u003a\u0041\u0064\u0064\u0072\u0065\u0073" ~
-	  "\u0073\u0042\u006f\u006f\u006b\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0001\u0000\u0001\u0000" ~
-	  "\u0004\u0000\u0000\u0000\u0003\u0000\u0004\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0001\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\r\u0000\u0000\u0000\u003a\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0008\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u0024\u0000\u0000\u0000\u0002\u0000\u0001\u0000" ~
-	  "\u0070\u0065\u006f\u0070\u006c\u0065\u0000\u0000" ~
-	  "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0003\u0000\u0001\u0000" ~
-	  "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0018\u00bc\u00e8\u0032\u0098\u008e\u0080\u0098" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" ~
-	  "");
+	__gshared static SegmentReader b_98808e9832e8bc18 = GeneratedClassSupport.decodeRawBytes([
+	  0x0,0x0,0x0,0x0,0x5,0x0,0x6,0x0,
+	  0x18,0xbc,0xe8,0x32,0x98,0x8e,0x80,0x98,
+	  0x12,0x0,0x0,0x0,0x1,0x0,0x1,0x0,
+	  0x74,0xe1,0x6e,0xf8,0x19,0x2e,0xb3,0x9e,
+	  0x4,0x0,0x7,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x15,0x0,0x0,0x0,0xca,0x0,0x0,0x0,
+	  0x21,0x0,0x0,0x0,0x17,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x2d,0x0,0x0,0x0,0x1f,0x1,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x61,0x64,0x64,0x72,0x65,0x73,0x73,0x62,
+	  0x6f,0x6f,0x6b,0x2e,0x63,0x61,0x70,0x6e,
+	  0x70,0x3a,0x50,0x65,0x72,0x73,0x6f,0x6e,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x4,0x0,0x0,0x0,0x1,0x0,0x1,0x0,
+	  0xd0,0x8a,0x9e,0x9c,0xb2,0x90,0x4e,0x81,
+	  0x1,0x0,0x0,0x0,0x62,0x0,0x0,0x0,
+	  0x50,0x68,0x6f,0x6e,0x65,0x4e,0x75,0x6d,
+	  0x62,0x65,0x72,0x0,0x0,0x0,0x0,0x0,
+	  0x14,0x0,0x0,0x0,0x3,0x0,0x4,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x1,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x7d,0x0,0x0,0x0,0x1a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x78,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0x84,0x0,0x0,0x0,0x2,0x0,0x1,0x0,
+	  0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x1,0x0,0x1,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x81,0x0,0x0,0x0,0x2a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x7c,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0x88,0x0,0x0,0x0,0x2,0x0,0x1,0x0,
+	  0x2,0x0,0x0,0x0,0x1,0x0,0x0,0x0,
+	  0x0,0x0,0x1,0x0,0x2,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x85,0x0,0x0,0x0,0x32,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x80,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0x8c,0x0,0x0,0x0,0x2,0x0,0x1,0x0,
+	  0x3,0x0,0x0,0x0,0x2,0x0,0x0,0x0,
+	  0x0,0x0,0x1,0x0,0x3,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x89,0x0,0x0,0x0,0x3a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x84,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0xa0,0x0,0x0,0x0,0x2,0x0,0x1,0x0,
+	  0x4,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x3d,0x69,0xc3,0xbd,0xd4,0x2b,0xb,0xbb,
+	  0x9d,0x0,0x0,0x0,0x5a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x69,0x64,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x8,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x8,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x6e,0x61,0x6d,0x65,0x0,0x0,0x0,0x0,
+	  0xc,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0xc,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x65,0x6d,0x61,0x69,0x6c,0x0,0x0,0x0,
+	  0xc,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0xc,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x70,0x68,0x6f,0x6e,0x65,0x73,0x0,0x0,
+	  0xe,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0x10,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0xd0,0x8a,0x9e,0x9c,0xb2,0x90,0x4e,0x81,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0xe,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x65,0x6d,0x70,0x6c,0x6f,0x79,0x6d,0x65,
+	  0x6e,0x74,0x0,0x0,0x0,0x0,0x0,0x0,
+	]);
+	__gshared static SegmentReader b_814e90b29c9e8ad0 = GeneratedClassSupport.decodeRawBytes([
+	  0x0,0x0,0x0,0x0,0x5,0x0,0x6,0x0,
+	  0xd0,0x8a,0x9e,0x9c,0xb2,0x90,0x4e,0x81,
+	  0x19,0x0,0x0,0x0,0x1,0x0,0x1,0x0,
+	  0x18,0xbc,0xe8,0x32,0x98,0x8e,0x80,0x98,
+	  0x1,0x0,0x7,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x15,0x0,0x0,0x0,0x2a,0x1,0x0,0x0,
+	  0x25,0x0,0x0,0x0,0x17,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x2d,0x0,0x0,0x0,0x77,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x61,0x64,0x64,0x72,0x65,0x73,0x73,0x62,
+	  0x6f,0x6f,0x6b,0x2e,0x63,0x61,0x70,0x6e,
+	  0x70,0x3a,0x50,0x65,0x72,0x73,0x6f,0x6e,
+	  0x2e,0x50,0x68,0x6f,0x6e,0x65,0x4e,0x75,
+	  0x6d,0x62,0x65,0x72,0x0,0x0,0x0,0x0,
+	  0x4,0x0,0x0,0x0,0x1,0x0,0x1,0x0,
+	  0x2f,0x6,0x85,0xd5,0x4,0xbd,0xe0,0x91,
+	  0x1,0x0,0x0,0x0,0x2a,0x0,0x0,0x0,
+	  0x54,0x79,0x70,0x65,0x0,0x0,0x0,0x0,
+	  0x8,0x0,0x0,0x0,0x3,0x0,0x4,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x1,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x29,0x0,0x0,0x0,0x3a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x24,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0x30,0x0,0x0,0x0,0x2,0x0,0x1,0x0,
+	  0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x1,0x0,0x1,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x2d,0x0,0x0,0x0,0x2a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x28,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0x34,0x0,0x0,0x0,0x2,0x0,0x1,0x0,
+	  0x6e,0x75,0x6d,0x62,0x65,0x72,0x0,0x0,
+	  0xc,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0xc,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x74,0x79,0x70,0x65,0x0,0x0,0x0,0x0,
+	  0xf,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x2f,0x6,0x85,0xd5,0x4,0xbd,0xe0,0x91,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0xf,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	]);
+	__gshared static SegmentReader b_91e0bd04d585062f = GeneratedClassSupport.decodeRawBytes([
+	  0x0,0x0,0x0,0x0,0x5,0x0,0x6,0x0,
+	  0x2f,0x6,0x85,0xd5,0x4,0xbd,0xe0,0x91,
+	  0x25,0x0,0x0,0x0,0x2,0x0,0x0,0x0,
+	  0xd0,0x8a,0x9e,0x9c,0xb2,0x90,0x4e,0x81,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x15,0x0,0x0,0x0,0x52,0x1,0x0,0x0,
+	  0x29,0x0,0x0,0x0,0x7,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x25,0x0,0x0,0x0,0x4f,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x61,0x64,0x64,0x72,0x65,0x73,0x73,0x62,
+	  0x6f,0x6f,0x6b,0x2e,0x63,0x61,0x70,0x6e,
+	  0x70,0x3a,0x50,0x65,0x72,0x73,0x6f,0x6e,
+	  0x2e,0x50,0x68,0x6f,0x6e,0x65,0x4e,0x75,
+	  0x6d,0x62,0x65,0x72,0x2e,0x54,0x79,0x70,
+	  0x65,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x1,0x0,0x1,0x0,
+	  0xc,0x0,0x0,0x0,0x1,0x0,0x2,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x1d,0x0,0x0,0x0,0x3a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x15,0x0,0x0,0x0,0x2a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0xd,0x0,0x0,0x0,0x2a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x6d,0x6f,0x62,0x69,0x6c,0x65,0x0,0x0,
+	  0x68,0x6f,0x6d,0x65,0x0,0x0,0x0,0x0,
+	  0x77,0x6f,0x72,0x6b,0x0,0x0,0x0,0x0,
+	]);
+	__gshared static SegmentReader b_bb0b2bd4bdc3693d = GeneratedClassSupport.decodeRawBytes([
+	  0x0,0x0,0x0,0x0,0x5,0x0,0x6,0x0,
+	  0x3d,0x69,0xc3,0xbd,0xd4,0x2b,0xb,0xbb,
+	  0x19,0x0,0x0,0x0,0x1,0x0,0x1,0x0,
+	  0x18,0xbc,0xe8,0x32,0x98,0x8e,0x80,0x98,
+	  0x4,0x0,0x7,0x0,0x1,0x0,0x4,0x0,
+	  0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x15,0x0,0x0,0x0,0x22,0x1,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x1d,0x0,0x0,0x0,0xe7,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x61,0x64,0x64,0x72,0x65,0x73,0x73,0x62,
+	  0x6f,0x6f,0x6b,0x2e,0x63,0x61,0x70,0x6e,
+	  0x70,0x3a,0x50,0x65,0x72,0x73,0x6f,0x6e,
+	  0x2e,0x65,0x6d,0x70,0x6c,0x6f,0x79,0x6d,
+	  0x65,0x6e,0x74,0x0,0x0,0x0,0x0,0x0,
+	  0x10,0x0,0x0,0x0,0x3,0x0,0x4,0x0,
+	  0x0,0x0,0xff,0xff,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x1,0x0,0x4,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x61,0x0,0x0,0x0,0x5a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x60,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0x6c,0x0,0x0,0x0,0x2,0x0,0x1,0x0,
+	  0x1,0x0,0xfe,0xff,0x3,0x0,0x0,0x0,
+	  0x0,0x0,0x1,0x0,0x5,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x69,0x0,0x0,0x0,0x4a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x68,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0x74,0x0,0x0,0x0,0x2,0x0,0x1,0x0,
+	  0x2,0x0,0xfd,0xff,0x3,0x0,0x0,0x0,
+	  0x0,0x0,0x1,0x0,0x6,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x71,0x0,0x0,0x0,0x3a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x6c,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0x78,0x0,0x0,0x0,0x2,0x0,0x1,0x0,
+	  0x3,0x0,0xfc,0xff,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x1,0x0,0x7,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x75,0x0,0x0,0x0,0x6a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x74,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0x80,0x0,0x0,0x0,0x2,0x0,0x1,0x0,
+	  0x75,0x6e,0x65,0x6d,0x70,0x6c,0x6f,0x79,
+	  0x65,0x64,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x65,0x6d,0x70,0x6c,0x6f,0x79,0x65,0x72,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0xc,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0xc,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x73,0x63,0x68,0x6f,0x6f,0x6c,0x0,0x0,
+	  0xc,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0xc,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x73,0x65,0x6c,0x66,0x45,0x6d,0x70,0x6c,
+	  0x6f,0x79,0x65,0x64,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	]);
+	__gshared static SegmentReader b_f934d9b354a8a134 = GeneratedClassSupport.decodeRawBytes([
+	  0x0,0x0,0x0,0x0,0x5,0x0,0x6,0x0,
+	  0x34,0xa1,0xa8,0x54,0xb3,0xd9,0x34,0xf9,
+	  0x12,0x0,0x0,0x0,0x1,0x0,0x0,0x0,
+	  0x74,0xe1,0x6e,0xf8,0x19,0x2e,0xb3,0x9e,
+	  0x1,0x0,0x7,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x15,0x0,0x0,0x0,0xf2,0x0,0x0,0x0,
+	  0x21,0x0,0x0,0x0,0x7,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x1d,0x0,0x0,0x0,0x3f,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x61,0x64,0x64,0x72,0x65,0x73,0x73,0x62,
+	  0x6f,0x6f,0x6b,0x2e,0x63,0x61,0x70,0x6e,
+	  0x70,0x3a,0x41,0x64,0x64,0x72,0x65,0x73,
+	  0x73,0x42,0x6f,0x6f,0x6b,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x1,0x0,0x1,0x0,
+	  0x4,0x0,0x0,0x0,0x3,0x0,0x4,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x1,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0xd,0x0,0x0,0x0,0x3a,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x8,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0x24,0x0,0x0,0x0,0x2,0x0,0x1,0x0,
+	  0x70,0x65,0x6f,0x70,0x6c,0x65,0x0,0x0,
+	  0xe,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x3,0x0,0x1,0x0,
+	  0x10,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x18,0xbc,0xe8,0x32,0x98,0x8e,0x80,0x98,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0xe,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	  0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+	]);
 }
 

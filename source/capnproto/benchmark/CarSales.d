@@ -30,11 +30,11 @@ import capnproto.benchmark.TestCase;
 
 void main(string[] args)
 {
-	CarSales testCase = new CarSales();
+	auto testCase = new CarSales();
 	testCase.execute(args);
 }
 
-class CarSales : TestCase!(ParkingLot, TotalValue, long)
+final class CarSales : TestCase!(ParkingLot, TotalValue, long)
 {
 public: //Methods.
 	override long setupRequest(ParkingLot.Builder request)
@@ -63,7 +63,7 @@ public: //Methods.
 	}
 
 package: //Methods.
-	static long carValue(Car.Reader car)
+	long carValue(Car.Reader car)
 	{
 		long result = 0;
 		result += car.getSeats() * 200;
@@ -77,7 +77,7 @@ package: //Methods.
 		
 		result += cast(long)car.getLength() * cast(long)car.getWidth() * cast(long)car.getHeight() / 50;
 		
-		Engine.Reader engine = car.getEngine();
+		auto engine = car.getEngine();
 		result += cast(long)engine.getHorsepower() * 40;
 		if(engine.getUsesElectric())
 			result += engine.getUsesGas()? 5000 : 3000;
@@ -92,30 +92,33 @@ package: //Methods.
 		return result;
 	}
 	
-	static void randomCar(ref Car.Builder car)
+	void randomCar(Car.Builder car)
 	{
+		static string[] MAKES = [ "Toyota", "GM", "Ford", "Honda", "Tesla" ];
+		static string[] MODELS = [ "Camry", "Prius", "Volt", "Accord", "Leaf", "Model S" ];
+		
 		car.setMake(MAKES[fastRand(cast(uint)MAKES.length)]);
 		car.setModel(MODELS[fastRand(cast(uint)MODELS.length)]);
 		
-		car.setColor(cast(Color)fastRand(cast(ushort)Color.silver + 1));
-		car.setSeats(cast(byte)(2 + fastRand(6)));
-		car.setDoors(cast(byte)(2 + fastRand(3)));
+		car.setColor(cast(Color)fastRand(cast(uint)Color.silver + 1));
+		car.setSeats(cast(ubyte)(2 + fastRand(6)));
+		car.setDoors(cast(ubyte)(2 + fastRand(3)));
 		
 		foreach(wheel; car.initWheels(4))
 		{
 			wheel.setDiameter(cast(short)(25 + fastRand(15)));
-			wheel.setAirPressure(cast(float)(30.0 + fastRandDouble(20.0)));
+			wheel.setAirPressure(cast(float)(30 + fastRandDouble(20)));
 			wheel.setSnowTires(fastRand(16) == 0);
 		}
 		
 		car.setLength(cast(short)(170 + fastRand(150)));
 		car.setWidth(cast(short)(48 + fastRand(36)));
 		car.setHeight(cast(short)(54 + fastRand(48)));
-		car.setWeight(cast(int)car.getLength() * cast(int)car.getWidth() * cast(int)car.getHeight() / 200);
+		car.setWeight(car.getLength() * car.getWidth() * car.getHeight() / 200);
 		
-		Engine.Builder engine = car.initEngine();
+		auto engine = car.initEngine();
 		engine.setHorsepower(cast(short)(100 * fastRand(400)));
-		engine.setCylinders(cast(byte)(4  + 2 * fastRand(3)));
+		engine.setCylinders(cast(byte)(4 + 2 * fastRand(3)));
 		engine.setCc(800 + fastRand(10000));
 		engine.setUsesGas(true);
 		engine.setUsesElectric(fastRand(2) == 1);
@@ -128,8 +131,4 @@ package: //Methods.
 		car.setCupHolders(cast(byte)fastRand(12));
 		car.setHasNavSystem(fastRand(2) == 1);
 	}
-
-private: //Variables.
-	static Text.Reader[] MAKES = [ Text.Reader("Toyota"), Text.Reader("GM"), Text.Reader("Ford"), Text.Reader("Honda"), Text.Reader("Tesla") ];
-	static Text.Reader[] MODELS = [ Text.Reader("Camry"), Text.Reader("Prius"), Text.Reader("Volt"), Text.Reader("Accord"), Text.Reader("Leaf"), Text.Reader("Model S") ];
 }

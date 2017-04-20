@@ -32,3 +32,15 @@ configuration "benchmark-eval" {
 	targetType "executable"
 	excludedSourceFiles "source/capnproto/benchmark/CatRank.d" "source/capnproto/benchmark/CarSales.d" "source/samples/*" "source/capnproto/tests/*"
 }
+
+configuration "sample-addressbook" {
+    targetName "addressbook"
+    targetType "executable"
+    excludedSourceFiles "source/samples/mmap.d" "source/capnproto/benchmark/*" "source/capnproto/tests/*"
+}
+
+configuration "sample-mmap" {
+    targetName "mmap"
+    targetType "executable"
+    excludedSourceFiles "source/samples/test.d" "source/capnproto/benchmark/*" "source/capnproto/tests/*"
+}
