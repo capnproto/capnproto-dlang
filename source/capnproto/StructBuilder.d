@@ -65,7 +65,7 @@ public: //Methods.
 	{
 		int bitOffset = offset;
 		int position = this.data + (bitOffset / 8);
-		return (this.segment.buffer.get(position) & (1 << (bitOffset % 8))) != 0;
+		return (this.segment.buffer.get!ubyte(position) & (1 << (bitOffset % 8))) != 0;
 	}
 	
 	bool _getBoolField(int offset, bool mask)
@@ -78,8 +78,8 @@ public: //Methods.
 		int bitOffset = offset;
 		byte bitnum = cast(byte)(bitOffset % 8);
 		int position = this.data + (bitOffset / 8);
-		byte oldValue = this.segment.buffer.get(position);
-		this.segment.buffer.put(position, cast(byte)((oldValue & (~(1 << bitnum))) | ((value? 1 : 0) << bitnum)));
+		byte oldValue = this.segment.buffer.get!byte(position);
+		this.segment.buffer.put!ubyte(position, cast(byte)((oldValue & (~(1 << bitnum))) | ((value? 1 : 0) << bitnum)));
 	}
 	
 	void _setBoolField(int offset, bool value, bool mask)
@@ -89,7 +89,7 @@ public: //Methods.
 	
 	byte _getByteField(int offset)
 	{
-		return this.segment.buffer.get(this.data + offset);
+		return this.segment.buffer.get!byte(this.data + offset);
 	}
 	
 	byte _getByteField(int offset, byte mask)
@@ -99,7 +99,7 @@ public: //Methods.
 	
 	void _setByteField(int offset, byte value)
 	{
-		this.segment.buffer.put(this.data + offset, value);
+		this.segment.buffer.put!byte(this.data + offset, value);
 	}
 	
 	void _setByteField(int offset, byte value, byte mask)
@@ -109,7 +109,7 @@ public: //Methods.
 	
 	ubyte _getUbyteField(int offset)
 	{
-		return cast(ubyte)this.segment.buffer.get(this.data + offset);
+		return this.segment.buffer.get!ubyte(this.data + offset);
 	}
 	
 	ubyte _getUbyteField(int offset, ubyte mask)
@@ -119,7 +119,7 @@ public: //Methods.
 	
 	void _setUbyteField(int offset, ubyte value)
 	{
-		this.segment.buffer.put(this.data + offset, value);
+		this.segment.buffer.put!ubyte(this.data + offset, value);
 	}
 	
 	void _setUbyteField(int offset, ubyte value, ubyte mask)
@@ -129,7 +129,7 @@ public: //Methods.
 	
 	short _getShortField(int offset)
 	{
-		return this.segment.buffer.getShort(this.data + offset * 2);
+		return this.segment.buffer.get!short(this.data + offset * 2);
 	}
 	
 	short _getShortField(int offset, short mask)
@@ -139,7 +139,7 @@ public: //Methods.
 	
 	void _setShortField(int offset, short value)
 	{
-		this.segment.buffer.putShort(this.data + offset * 2, value);
+		this.segment.buffer.put!short(this.data + offset * 2, value);
 	}
 	
 	void _setShortField(int offset, short value, short mask)
@@ -149,7 +149,7 @@ public: //Methods.
 	
 	ushort _getUshortField(int offset)
 	{
-		return this.segment.buffer.getShort(this.data + offset * 2);
+		return this.segment.buffer.get!short(this.data + offset * 2);
 	}
 	
 	ushort _getUshortField(int offset, ushort mask)
@@ -159,7 +159,7 @@ public: //Methods.
 	
 	void _setUshortField(int offset, ushort value)
 	{
-		this.segment.buffer.putShort(this.data + offset * 2, value);
+		this.segment.buffer.put!short(this.data + offset * 2, value);
 	}
 	
 	void _setUshortField(int offset, ushort value, ushort mask)
@@ -169,7 +169,7 @@ public: //Methods.
 	
 	int _getIntField(int offset)
 	{
-		return this.segment.buffer.getInt(this.data + offset * 4);
+		return this.segment.buffer.get!int(this.data + offset * 4);
 	}
 	
 	int _getIntField(int offset, int mask)
@@ -179,7 +179,7 @@ public: //Methods.
 	
 	void _setIntField(int offset, int value)
 	{
-		this.segment.buffer.putInt(this.data + offset * 4, value);
+		this.segment.buffer.put!int(this.data + offset * 4, value);
 	}
 	
 	void _setIntField(int offset, int value, int mask)
@@ -189,7 +189,7 @@ public: //Methods.
 	
 	uint _getUintField(int offset)
 	{
-		return this.segment.buffer.getInt(this.data + offset * 4);
+		return this.segment.buffer.get!int(this.data + offset * 4);
 	}
 	
 	uint _getUintField(int offset, uint mask)
@@ -199,7 +199,7 @@ public: //Methods.
 	
 	void _setUintField(int offset, uint value)
 	{
-		this.segment.buffer.putInt(this.data + offset * 4, value);
+		this.segment.buffer.put!int(this.data + offset * 4, value);
 	}
 	
 	void _setUintField(int offset, uint value, uint mask)
@@ -209,7 +209,7 @@ public: //Methods.
 	
 	long _getLongField(int offset)
 	{
-		return this.segment.buffer.getLong(this.data + offset * 8);
+		return this.segment.buffer.get!long(this.data + offset * 8);
 	}
 	
 	long _getLongField(int offset, long mask)
@@ -219,7 +219,7 @@ public: //Methods.
 	
 	void _setLongField(int offset, long value)
 	{
-		this.segment.buffer.putLong(this.data + offset * 8, value);
+		this.segment.buffer.put!long(this.data + offset * 8, value);
 	}
 	
 	void _setLongField(int offset, long value, long mask)
@@ -229,7 +229,7 @@ public: //Methods.
 	
 	ulong _getUlongField(int offset)
 	{
-		return this.segment.buffer.getLong(this.data + offset * 8);
+		return this.segment.buffer.get!long(this.data + offset * 8);
 	}
 	
 	ulong _getUlongField(int offset, ulong mask)
@@ -239,7 +239,7 @@ public: //Methods.
 	
 	void _setUlongField(int offset, ulong value)
 	{
-		this.segment.buffer.putLong(this.data + offset * 8, value);
+		this.segment.buffer.put!long(this.data + offset * 8, value);
 	}
 	
 	void _setUlongField(int offset, ulong value, ulong mask)
@@ -249,54 +249,54 @@ public: //Methods.
 	
 	float _getFloatField(int offset)
 	{
-		return this.segment.buffer.getFloat(this.data + offset * 4);
+		return this.segment.buffer.get!float(this.data + offset * 4);
 	}
 	
 	float _getFloatField(int offset, int mask)
 	{
-		return intBitsToFloat(this.segment.buffer.getInt(this.data + offset * 4) ^ mask);
+		return intBitsToFloat(this.segment.buffer.get!int(this.data + offset * 4) ^ mask);
 	}
 	
 	void _setFloatField(int offset, float value)
 	{
-		this.segment.buffer.putFloat(this.data + offset * 4, value);
+		this.segment.buffer.put!float(this.data + offset * 4, value);
 	}
 	
 	void _setFloatField(int offset, float value, int mask)
 	{
-		this.segment.buffer.putInt(this.data + offset * 4, floatToIntBits(value) ^ mask);
+		this.segment.buffer.put!int(this.data + offset * 4, floatToIntBits(value) ^ mask);
 	}
 	
 	double _getDoubleField(int offset)
 	{
-		return this.segment.buffer.getDouble(this.data + offset * 8);
+		return this.segment.buffer.get!double(this.data + offset * 8);
 	}
 	
 	double _getDoubleField(int offset, long mask)
 	{
-		return longBitsToDouble(this.segment.buffer.getLong(this.data + offset * 8) ^ mask);
+		return longBitsToDouble(this.segment.buffer.get!long(this.data + offset * 8) ^ mask);
 	}
 	
 	void _setDoubleField(int offset, double value)
 	{
-		this.segment.buffer.putDouble(this.data + offset * 8, value);
+		this.segment.buffer.put!double(this.data + offset * 8, value);
 	}
 	
 	void _setDoubleField(int offset, double value, long mask)
 	{
-		this.segment.buffer.putLong(this.data + offset * 8, doubleToLongBits(value) ^ mask);
+		this.segment.buffer.put!long(this.data + offset * 8, doubleToLongBits(value) ^ mask);
 	}
 	
 	bool _pointerFieldIsNull(int ptrIndex)
 	{
-		return this.segment.buffer.getLong((this.pointers + ptrIndex) * Constants.BYTES_PER_WORD) == 0;
+		return this.segment.buffer.get!long((this.pointers + ptrIndex) * Constants.BYTES_PER_WORD) == 0;
 	}
 	
 	void _clearPointerField(int ptrIndex)
 	{
 		int pointer = this.pointers + ptrIndex;
 		WireHelpers.zeroObject(this.segment, pointer);
-		this.segment.buffer.putLong(pointer * 8, 0L);
+		this.segment.buffer.put!long(pointer * 8, 0L);
 	}
 	
 	T.Builder _getPointerField(T)(int index)

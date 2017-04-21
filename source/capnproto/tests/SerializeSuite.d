@@ -99,12 +99,12 @@ void expectSerializesTo(int exampleSegmentCount, ubyte[] exampleBytes)
 		foreach(i; 0..exampleSegmentCount)
 		{
 			auto segment = arena.segments.data[i];
-			auto segmentWords = segment.buffer.asLongBuffer();
+			auto segmentWords = ByteBuffer(segment.buffer.buffer[segment.buffer.position..segment.buffer.limit], segment.buffer.limit/8, 0);
 			
 			assert(segmentWords.capacity/8 == i);
 			segmentWords.rewind();
-			while(segmentWords.hasRemaining)
-				assert(segmentWords.getLong() == i);
+			while(!segmentWords.empty())
+				assert(segmentWords.get!long() == i);
 		}
 	}
 	
@@ -119,7 +119,7 @@ void expectSerializesTo(int exampleSegmentCount, ubyte[] exampleBytes)
 	// ------
 	// read via ByteBuffer
 	{
-		auto wrapped = ByteBuffer.wrap(exampleBytes);
+		auto wrapped = ByteBuffer(exampleBytes);
 		auto messageReader = Serialize.read(wrapped);
 		checkSegmentContents(messageReader.arena);
 	}

@@ -71,7 +71,7 @@ public: //Methods.
 	
 	void put(int index, long value)
 	{
-		buffer.putLong(index * Constants.BYTES_PER_WORD, value);
+		buffer.put!long(index * Constants.BYTES_PER_WORD, value);
 	}
 	
 	SegmentReader* asReader()

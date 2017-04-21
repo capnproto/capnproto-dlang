@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import capnproto.Constants;
 import capnproto.DecodeException;
@@ -40,7 +39,7 @@ struct Serialize
 public: //Methods.
 	static void fillBuffer(ref ByteBuffer buffer, ReadableByteChannel bc)
 	{
-		while(buffer.hasRemaining())
+		while(!buffer.empty())
 		{
 			auto r = bc.read(buffer);
 			if(r < 0)
@@ -60,11 +59,11 @@ public: //Methods.
 		auto firstWord = makeByteBuffer(Constants.BYTES_PER_WORD);
 		fillBuffer(firstWord, bc);
 		
-		int segmentCount = 1 + firstWord.getInt(0);
+		int segmentCount = 1 + firstWord.get!int(0);
 		
 		int segment0Size = 0;
 		if(segmentCount > 0)
-			segment0Size = firstWord.getInt(4);
+			segment0Size = firstWord.get!int(4);
 		
 		int totalWords = segment0Size;
 		
@@ -80,7 +79,7 @@ public: //Methods.
 			fillBuffer(moreSizesRaw, bc);
 			foreach(ii; 0..segmentCount-1)
 			{
-				int size = moreSizesRaw.getInt(ii * 4);
+				int size = moreSizesRaw.get!int(ii * 4);
 				moreSizes ~= size;
 				totalWords += size;
 			}
@@ -96,16 +95,14 @@ public: //Methods.
 		
 		allSegments.rewind();
 		segmentSlices[0] = allSegments.slice();
-		segmentSlices[0].limit(segment0Size * Constants.BYTES_PER_WORD);
-		segmentSlices[0].order(ByteOrder.LITTLE_ENDIAN);
+		segmentSlices[0].limit = segment0Size * Constants.BYTES_PER_WORD;
 		
 		int offset = segment0Size;
 		foreach(ii; 1..segmentCount)
 		{
-			allSegments.position(offset * Constants.BYTES_PER_WORD);
+			allSegments.position = offset * Constants.BYTES_PER_WORD;
 			segmentSlices[ii] = allSegments.slice();
-			segmentSlices[ii].limit(moreSizes.data[ii - 1] * Constants.BYTES_PER_WORD);
-			segmentSlices[ii].order(ByteOrder.LITTLE_ENDIAN);
+			segmentSlices[ii].limit = moreSizes.data[ii - 1] * Constants.BYTES_PER_WORD;
 			offset += moreSizes.data[ii - 1];
 		}
 		
@@ -120,15 +117,13 @@ public: //Methods.
 	///Upon return, `bb.position()` will be at the end of the message.
 	static MessageReader read(ref ByteBuffer bb, ReaderOptions options)
 	{
-		bb.order(ByteOrder.LITTLE_ENDIAN);
-		
-		int segmentCount = 1 + bb.getInt();
+		int segmentCount = 1 + bb.get!int();
 		if(segmentCount > 512)
 			throw new IOException("Too many segments.");
 		
 		auto segmentSlices = new ByteBuffer[](segmentCount);
 		
-		auto segmentSizesBase = bb.position();
+		auto segmentSizesBase = bb.position;
 		int segmentSizesSize = segmentCount * 4;
 		
 		int align_ = Constants.BYTES_PER_WORD - 1;
@@ -138,16 +133,15 @@ public: //Methods.
 		
 		foreach(ii; 0..segmentCount)
 		{
-			int segmentSize = bb.getInt(segmentSizesBase + ii * 4);
+			int segmentSize = bb.get!int(segmentSizesBase + ii * 4);
 			
-			bb.position(segmentBase + totalWords * Constants.BYTES_PER_WORD);
+			bb.position = segmentBase + totalWords * Constants.BYTES_PER_WORD;
 			segmentSlices[ii] = bb.slice();
-			segmentSlices[ii].limit(segmentSize * Constants.BYTES_PER_WORD);
-			segmentSlices[ii].order(ByteOrder.LITTLE_ENDIAN);
+			segmentSlices[ii].limit = segmentSize * Constants.BYTES_PER_WORD;
 			
 			totalWords += segmentSize;
 		}
-		bb.position(segmentBase + totalWords * Constants.BYTES_PER_WORD);
+		bb.position = segmentBase + totalWords * Constants.BYTES_PER_WORD;
 		
 		if(totalWords > options.traversalLimitInWords)
 			throw new DecodeException("Message size exceeds traversal limit.");
@@ -174,7 +168,7 @@ public: //Methods.
 		foreach(i; 0..segments.length)
 		{
 			auto s = segments[i];
-			bytes += s.limit();
+			bytes += s.limit;
 		}
 		
 		return bytes / Constants.BYTES_PER_WORD;
@@ -185,21 +179,20 @@ public: //Methods.
 		auto segments = message.getSegmentsForOutput();
 		auto tableSize = (segments.length + 2) & (~1);
 		
-		auto table = ByteBuffer.allocate(4 * tableSize);
-		table.order(ByteOrder.LITTLE_ENDIAN);
+		auto table = ByteBuffer(new ubyte[](4 * tableSize));
 		
-		table.putInt(0, cast(int)(segments.length-1));
+		table.put!int(0, cast(int)(segments.length-1));
 		
 		foreach(i; 0..segments.length)
-			table.putInt(4 * (i + 1), cast(int)(segments[i].limit()/8));
+			table.put!int(4 * (i + 1), cast(int)(segments[i].limit/8));
 		
 		//Any padding is already zeroed.
-		while(table.hasRemaining())
+		while(!table.empty())
 			outputChannel.write(table);
 		
 		foreach(buffer; segments)
 		{
-			while(buffer.hasRemaining())
+			while(!buffer.empty())
 				outputChannel.write(buffer);
 		}
 	}
@@ -208,7 +201,6 @@ private: //Methods.
 	static ByteBuffer makeByteBuffer(int bytes)
 	{
 		auto result = ByteBuffer.prepare(bytes);
-		result.order(ByteOrder.LITTLE_ENDIAN);
 		//result.mark(); //TODO: Is this used for anything?
 		return result;
 	}

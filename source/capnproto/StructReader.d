@@ -58,10 +58,9 @@ public: //Methods.
 	
 	bool _getBoolField(int offset)
 	{
-		//XXX should use unsigned operations.
 		if(offset < this.dataSize)
 		{
-			byte b = this.segment.buffer.get(this.data + offset / 8);
+			ubyte b = this.segment.buffer.get!ubyte(this.data + offset / 8);
 			return (b & (1 << (offset % 8))) != 0;
 		}
 		return false;
@@ -75,7 +74,7 @@ public: //Methods.
 	byte _getByteField(int offset)
 	{
 		if((offset + 1) * 8 <= this.dataSize)
-			return this.segment.buffer.get(this.data + offset);
+			return this.segment.buffer.get!byte(this.data + offset);
 		return 0;
 	}
 	
@@ -87,7 +86,7 @@ public: //Methods.
 	ubyte _getUbyteField(int offset)
 	{
 		if((offset + 1) * 8 <= this.dataSize)
-			return cast(ubyte)this.segment.buffer.get(this.data + offset);
+			return this.segment.buffer.get!ubyte(this.data + offset);
 		return 0;
 	}
 	
@@ -99,7 +98,7 @@ public: //Methods.
 	short _getShortField(int offset)
 	{
 		if((offset + 1) * 16 <= this.dataSize)
-			return this.segment.buffer.getShort(this.data + offset * 2);
+			return this.segment.buffer.get!short(this.data + offset * 2);
 		return 0;
 	}
 	
@@ -111,7 +110,7 @@ public: //Methods.
 	ushort _getUshortField(int offset)
 	{
 		if((offset + 1) * 16 <= this.dataSize)
-			return cast(ushort)this.segment.buffer.getShort(this.data + offset * 2);
+			return cast(ushort)this.segment.buffer.get!short(this.data + offset * 2);
 		return 0;
 	}
 	
@@ -123,7 +122,7 @@ public: //Methods.
 	int _getIntField(int offset)
 	{
 		if((offset + 1) * 32 <= this.dataSize)
-			return this.segment.buffer.getInt(this.data + offset * 4);
+			return this.segment.buffer.get!int(this.data + offset * 4);
 		return 0;
 	}
 	
@@ -135,7 +134,7 @@ public: //Methods.
 	uint _getUintField(int offset)
 	{
 		if((offset + 1) * 32 <= this.dataSize)
-			return cast(uint)this.segment.buffer.getInt(this.data + offset * 4);
+			return cast(uint)this.segment.buffer.get!int(this.data + offset * 4);
 		return 0;
 	}
 	
@@ -147,7 +146,7 @@ public: //Methods.
 	long _getLongField(int offset)
 	{
 		if((offset + 1) * 64 <= this.dataSize)
-			return this.segment.buffer.getLong(this.data + offset * 8);
+			return this.segment.buffer.get!long(this.data + offset * 8);
 		return 0;
 	}
 	
@@ -159,7 +158,7 @@ public: //Methods.
 	ulong _getUlongField(int offset)
 	{
 		if((offset + 1) * 64 <= this.dataSize)
-			return cast(ulong)this.segment.buffer.getLong(this.data + offset * 8);
+			return cast(ulong)this.segment.buffer.get!long(this.data + offset * 8);
 		return 0;
 	}
 	
@@ -171,34 +170,34 @@ public: //Methods.
 	float _getFloatField(int offset)
 	{
 		if((offset + 1) * 32 <= this.dataSize)
-			return this.segment.buffer.getFloat(this.data + offset * 4);
+			return this.segment.buffer.get!float(this.data + offset * 4);
 		return 0;
 	}
 	
 	float _getFloatField(int offset, int mask)
 	{
 		if((offset + 1) * 32 <= this.dataSize)
-			return intBitsToFloat(this.segment.buffer.getInt(this.data + offset * 4) ^ mask);
+			return intBitsToFloat(this.segment.buffer.get!int(this.data + offset * 4) ^ mask);
 		return intBitsToFloat(mask);
 	}
 	
 	double _getDoubleField(int offset)
 	{
 		if((offset + 1) * 64 <= this.dataSize)
-			return this.segment.buffer.getDouble(this.data + offset * 8);
+			return this.segment.buffer.get!double(this.data + offset * 8);
 		return 0;
 	}
 	
 	double _getDoubleField(int offset, long mask)
 	{
 		if((offset + 1) * 64 <= this.dataSize)
-			return longBitsToDouble(this.segment.buffer.getLong(this.data + offset * 8) ^ mask);
+			return longBitsToDouble(this.segment.buffer.get!long(this.data + offset * 8) ^ mask);
 		return longBitsToDouble(mask);
 	}
 	
 	bool _pointerFieldIsNull(int ptrIndex)
 	{
-		return this.segment.buffer.getLong((this.pointers + ptrIndex) * Constants.BYTES_PER_WORD) == 0;
+		return this.segment.buffer.get!long((this.pointers + ptrIndex) * Constants.BYTES_PER_WORD) == 0;
 	}
 	
 	T.Reader _getPointerField(T)(int ptrIndex)

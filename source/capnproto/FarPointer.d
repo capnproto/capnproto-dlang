@@ -44,7 +44,7 @@ struct FarPointer
 	
 	static void setSegmentId(ref ByteBuffer buffer, int offset, int segmentId)
 	{
-		buffer.putInt(8 * offset + 4, segmentId);
+		buffer.put!int(8 * offset + 4, segmentId);
 	}
 	
 	static void set(ref ByteBuffer buffer, int offset, bool isDoubleFar, int pos)

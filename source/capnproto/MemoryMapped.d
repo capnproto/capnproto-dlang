@@ -31,7 +31,7 @@ public: //Methods.
 		if(size == 0)
 			return 0;
 		dst.buffer = cast(ubyte[])file[index..index+size];
-		dst.position_ += size;
+		dst.position += size;
 		index += size;
 		return size;
 	}

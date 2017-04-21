@@ -65,8 +65,8 @@ public: //Methods.
 	
 	void passByBytes(Compression compression, long iters)
 	{
-		auto requestBytes = ByteBuffer.allocate(SCRATCH_SIZE * 8);
-		auto responseBytes = ByteBuffer.allocate(SCRATCH_SIZE * 8);
+		auto requestBytes = ByteBuffer(new ubyte[](SCRATCH_SIZE * 8));
+		auto responseBytes = ByteBuffer(new ubyte[](SCRATCH_SIZE * 8));
 		
 		foreach(ii; 0..iters)
 		{

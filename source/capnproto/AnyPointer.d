@@ -47,7 +47,7 @@ public: //Types.
 		
 		bool isNull()
 		{
-			return WirePointer.isNull(this.segment.buffer.getLong(this.pointer * Constants.BYTES_PER_WORD));
+			return WirePointer.isNull(this.segment.buffer.get!long(this.pointer * Constants.BYTES_PER_WORD));
 		}
 		
 		T.Reader getAs(T)()
@@ -77,7 +77,7 @@ public: //Types.
 		
 		bool isNull()
 		{
-			return WirePointer.isNull(this.segment.buffer.getLong(this.pointer * Constants.BYTES_PER_WORD));
+			return WirePointer.isNull(this.segment.buffer.get!long(this.pointer * Constants.BYTES_PER_WORD));
 		}
 		
 		T.Builder getAs(T)()
@@ -150,7 +150,7 @@ public: //Types.
 		void clear()
 		{
 			WireHelpers.zeroObject(this.segment, this.pointer);
-			this.segment.buffer.putLong(this.pointer * 8, 0L);
+			this.segment.buffer.put!long(this.pointer * 8, 0L);
 		}
 	
 	private: //Variables.

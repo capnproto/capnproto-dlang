@@ -22,7 +22,6 @@
 module capnproto.tests.EncodingSuite;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import capnproto;
 
@@ -93,7 +92,7 @@ unittest
 	foreach(segment; segments)
 	{
 		foreach(jj; 0..segment.limit - 1)
-			assert(segment.get(jj) == 0);
+			assert(segment.get!ubyte(jj) == 0);
 	}
 }
 
@@ -104,7 +103,7 @@ unittest
 	                 6,0,0,0, 1,0,0,0, 2,0,  0,  0, 2,0,0,0,
 	                 0,0,0,0, 1,0,0,0, 1,7,255,127, 0,0,0,0];
 	
-	auto input = new ArrayInputStream(ByteBuffer.wrap(bytes));
+	auto input = new ArrayInputStream(ByteBuffer(bytes));
 	auto message = Serialize.read(input);
 	auto root = message.getRoot!TestAllTypes();
 	assert(root.getBoolField() == true);
@@ -209,8 +208,7 @@ unittest
 	           0, 0, 0, 0,    0, 0, 0, 0, //Null pointer.
 	        0x68, 0x65, 0x6c, 0x6c, 0x6f, 0x21, 0x21, 0]; //"hello!!".
 	
-	auto segment = ByteBuffer.wrap(bytes);
-	segment.order(ByteOrder.LITTLE_ENDIAN);
+	auto segment = ByteBuffer(bytes);
 	auto messageReader = new MessageReader([segment], ReaderOptions.DEFAULT_READER_OPTIONS);
 	
 	auto oldVersion = messageReader.getRoot!(StructList!TestOldVersion)();
@@ -226,7 +224,7 @@ unittest
 	
 	auto segments = message.getSegmentsForOutput();
 	assert(segments.length == 1);
-	assert(segments[0].limit() == 6 * 8);
+	assert(segments[0].limit == 6 * 8);
 	
 	auto newVersion = message.getRoot!(StructList!TestNewVersion)();
 	assert(newVersion.length == 1);
@@ -234,10 +232,10 @@ unittest
 	assert(newVersion.get(0).getOld2().toString() == "hello!!");
 	
 	auto segments1 = message.getSegmentsForOutput();
-	assert(segments[0].limit() == 6 * 8);
+	assert(segments[0].limit == 6 * 8);
 	//Check the the old list, including the tag, was zeroed.
 	foreach(ii; 8..(5 * 8) - 1)
-		assert(segments[0].get(ii) == 0);
+		assert(segments[0].get!ubyte(ii) == 0);
 }
 
 //Generics
@@ -491,8 +489,7 @@ unittest
 	                 1,0,0,0, 0x17,0,0,0, 0,0,0,0xff, 16,0,0,0,
 	                 0,0,0,0,    0,0,0,0, 0,0,0,   0,  0,0,0,0];
 	
-	auto segment = ByteBuffer.wrap(bytes);
-	segment.order(ByteOrder.LITTLE_ENDIAN);
+	auto segment = ByteBuffer(bytes);
 	auto message = new MessageReader([segment], ReaderOptions.DEFAULT_READER_OPTIONS);
 	
 	auto root = message.getRoot!TestAnyPointer();

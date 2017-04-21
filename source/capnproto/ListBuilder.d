@@ -52,38 +52,38 @@ public: //Methods.
 	bool _getBooleanElement(size_t index)
 	{
 		long bindex = cast(long)index * this.step;
-		byte b = this.segment.buffer.get(this.ptr + cast(int)(bindex / Constants.BITS_PER_BYTE));
+		byte b = this.segment.buffer.get!byte(this.ptr + cast(int)(bindex / Constants.BITS_PER_BYTE));
 		return (b & (1 << (bindex % 8))) != 0;
 	}
 	
 	byte _getByteElement(size_t index)
 	{
-		return this.segment.buffer.get(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get!byte(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
 	}
 	
 	short _getShortElement(size_t index)
 	{
-		return this.segment.buffer.getShort(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get!short(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
 	}
 	
 	int _getIntElement(size_t index)
 	{
-		return this.segment.buffer.getInt(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get!int(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
 	}
 	
 	long _getLongElement(size_t index)
 	{
-		return this.segment.buffer.getLong(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get!long(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
 	}
 	
 	float _getFloatElement(size_t index)
 	{
-		return this.segment.buffer.getFloat(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get!float(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
 	}
 	
 	double _getDoubleElement(size_t index)
 	{
-		return this.segment.buffer.getDouble(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get!double(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
 	}
 	
 	void _setBooleanElement(size_t index, bool value)
@@ -91,38 +91,38 @@ public: //Methods.
 		long bitOffset = index * this.step;
 		byte bitnum = cast(byte)(bitOffset % 8);
 		int position = cast(int)(this.ptr + (bitOffset / 8));
-		byte oldValue = this.segment.buffer.get(position);
-		this.segment.buffer.put(position, cast(byte)((oldValue & (~(1 << bitnum))) | ((value? 1 : 0) << bitnum)));
+		byte oldValue = this.segment.buffer.get!byte(position);
+		this.segment.buffer.put!ubyte(position, cast(byte)((oldValue & (~(1 << bitnum))) | ((value? 1 : 0) << bitnum)));
 	}
 	
 	void _setByteElement(size_t index, byte value)
 	{
-		this.segment.buffer.put(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE), value);
+		this.segment.buffer.put!ubyte(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE), value);
 	}
 	
 	void _setShortElement(size_t index, short value)
 	{
-		this.segment.buffer.putShort(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE), value);
+		this.segment.buffer.put!short(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE), value);
 	}
 	
 	void _setIntElement(size_t index, int value)
 	{
-		this.segment.buffer.putInt(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE), value);
+		this.segment.buffer.put!int(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE), value);
 	}
 	
 	void _setLongElement(size_t index, long value)
 	{
-		this.segment.buffer.putLong(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE), value);
+		this.segment.buffer.put!long(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE), value);
 	}
 	
 	void _setFloatElement(size_t index, float value)
 	{
-		this.segment.buffer.putFloat(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE), value);
+		this.segment.buffer.put!float(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE), value);
 	}
 	
 	void _setDoubleElement(size_t index, double value)
 	{
-		this.segment.buffer.putDouble(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE), value);
+		this.segment.buffer.put!double(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE), value);
 	}
 	
 	T.Builder _getStructElement(T)(size_t index)

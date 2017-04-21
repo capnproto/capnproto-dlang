@@ -53,38 +53,38 @@ public: //Methods.
 	bool _getBooleanElement(size_t index)
 	{
 		long bindex = cast(long)index * this.step;
-		byte b = this.segment.buffer.get(this.ptr + cast(int)(bindex / Constants.BITS_PER_BYTE));
+		byte b = this.segment.buffer.get!byte(this.ptr + cast(int)(bindex / Constants.BITS_PER_BYTE));
 		return (b & (1 << (bindex % 8))) != 0;
 	}
 	
 	byte _getByteElement(size_t index)
 	{
-		return this.segment.buffer.get(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get!byte(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
 	}
 	
 	short _getShortElement(size_t index)
 	{
-		return this.segment.buffer.getShort(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get!short(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
 	}
 	
 	int _getIntElement(size_t index)
 	{
-		return this.segment.buffer.getInt(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get!int(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
 	}
 	
 	long _getLongElement(size_t index)
 	{
-		return this.segment.buffer.getLong(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get!long(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
 	}
 	
 	float _getFloatElement(size_t index)
 	{
-		return this.segment.buffer.getFloat(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get!float(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
 	}
 	
 	double _getDoubleElement(size_t index)
 	{
-		return this.segment.buffer.getDouble(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
+		return this.segment.buffer.get!double(this.ptr + cast(int)(cast(long)index * this.step / Constants.BITS_PER_BYTE));
 	}
 	
 	T.Reader _getStructElement(T)(size_t index)

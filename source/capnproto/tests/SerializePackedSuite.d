@@ -33,7 +33,7 @@ void expectPacksTo(ubyte[] unpacked, ubyte[] packed)
 		auto bytes = new ubyte[](packed.length);
 		auto writer = new ArrayOutputStream(bytes);
 		auto packedOutputStream = new PackedOutputStream(writer);
-		auto wrapped = ByteBuffer.wrap(unpacked);
+		auto wrapped = ByteBuffer(unpacked);
 		packedOutputStream.write(wrapped);
 		
 		assert(bytes == packed);
@@ -42,10 +42,10 @@ void expectPacksTo(ubyte[] unpacked, ubyte[] packed)
 	// ------
 	// read
 	{
-		auto reader = new ArrayInputStream(ByteBuffer.wrap(packed));
+		auto reader = new ArrayInputStream(ByteBuffer(packed));
 		auto packedInputStream = new PackedInputStream(reader);
 		auto bytes = new ubyte[](unpacked.length);
-		auto wrapped = ByteBuffer.wrap(bytes);
+		auto wrapped = ByteBuffer(bytes);
 		auto n = packedInputStream.read(wrapped);
 		
 		assert(n == unpacked.length);

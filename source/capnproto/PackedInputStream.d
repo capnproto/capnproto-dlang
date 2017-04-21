@@ -38,14 +38,14 @@ public: //Methods.
 	size_t read(ref ByteBuffer outBuf)
 	{
 		if(outBuf.buffer is null)
-			outBuf = ByteBuffer.allocate(outBuf.remaining());
+			outBuf = ByteBuffer(new ubyte[](outBuf.remaining()));
 		auto len = outBuf.remaining();
 		if(len == 0)
 			return 0;
 		if(len % 8 != 0)
 			throw new Error("PackedInputStream reads must be word-aligned.");
 		
-		auto outPtr = outBuf.position();
+		auto outPtr = outBuf.position;
 		auto outEnd = outPtr + len;
 		
 		auto inBuf = this.inner.getReadBuffer();
@@ -67,7 +67,7 @@ public: //Methods.
 				//# We have at least 1, but not 10, bytes available. We need to read
 				//# slowly, doing a bounds check on each byte.
 				
-				tag = inBuf.get();
+				tag = inBuf.get!ubyte();
 				
 				foreach(i; 0..8)
 				{
@@ -75,10 +75,10 @@ public: //Methods.
 					{
 						if(inBuf.remaining() == 0)
 							inBuf = this.inner.getReadBuffer();
-						outBuf.put(inBuf.get());
+						outBuf.put!ubyte(inBuf.get!ubyte());
 					}
 					else
-						outBuf.put(cast(byte)0);
+						outBuf.put!ubyte(0);
 				}
 				
 				if(inBuf.remaining() == 0 && (tag == 0 || tag == cast(byte)0xff))
@@ -86,12 +86,12 @@ public: //Methods.
 			}
 			else
 			{
-				tag = inBuf.get();
+				tag = inBuf.get!ubyte();
 				foreach(n; 0..8)
 				{
 					bool isNonzero = (tag & (1 << n)) != 0;
-					outBuf.put(cast(byte)(inBuf.get() & (isNonzero? -1 : 0)));
-					inBuf.position(inBuf.position() + (isNonzero? 0 : -1));
+					outBuf.put!ubyte(cast(byte)(inBuf.get!ubyte() & (isNonzero? -1 : 0)));
+					inBuf.position += isNonzero? 0 : -1;
 				}
 			}
 			
@@ -100,36 +100,36 @@ public: //Methods.
 				if(inBuf.remaining() == 0)
 					throw new Error("Should always have non-empty buffer here.");
 				
-				int runLength = inBuf.get() * 8;
+				int runLength = inBuf.get!ubyte() * 8;
 				if(runLength > outEnd - outPtr)
 					throw new Error("Packed input did not end cleanly on a segment boundary.");
 				
 				foreach(i; 0..runLength)
-					outBuf.put(0);
+					outBuf.put!ubyte(0);
 			}
 			else if(tag == 0xff)
 			{
-				int runLength = inBuf.get() * 8;
+				int runLength = inBuf.get!ubyte() * 8;
 				
 				if(inBuf.remaining() >= runLength)
 				{
 					//# Fast path.
 					auto slice = inBuf.slice();
-					slice.limit(runLength);
-					outBuf.put(slice);
-					inBuf.position(inBuf.position() + runLength);
+					slice.limit = runLength;
+					outBuf.put!ByteBuffer(slice);
+					inBuf.position += runLength;
 				}
 				else
 				{
 					//# Copy over the first buffer, then do one big read for the rest.
 					runLength -= inBuf.remaining();
-					outBuf.put(*inBuf);
+					outBuf.put!ByteBuffer(*inBuf);
 					
 					auto slice = outBuf.slice();
-					slice.limit(runLength);
+					slice.limit = runLength;
 					
 					this.inner.read(slice);
-					outBuf.position(outBuf.position() + runLength);
+					outBuf.position += runLength;
 					
 					if(outBuf.remaining() == 0)
 						return len;

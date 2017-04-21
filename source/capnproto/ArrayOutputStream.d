@@ -35,12 +35,12 @@ public: //Variables.
 public: //Methods.
 	this(ref ByteBuffer buf)
 	{
-		this.buf = buf.duplicate();
+		this.buf = buf;
 	}
 	
 	this(ref ubyte[] buf)
 	{
-		this.buf = ByteBuffer.wrap(buf);
+		this.buf = ByteBuffer(buf);
 	}
 	
 	size_t write(ref ByteBuffer src)
@@ -49,7 +49,7 @@ public: //Methods.
 		auto size = src.remaining();
 		if(available < size)
 			throw new IOException("Backing buffer was not large enough.");
-		this.buf.put(src);
+		this.buf.put!ByteBuffer(src);
 		return size;
 	}
 	

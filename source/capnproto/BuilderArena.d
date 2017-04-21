@@ -24,7 +24,6 @@ module capnproto.BuilderArena;
 import std.array : Appender;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import capnproto.Arena;
 import capnproto.Constants;
@@ -68,8 +67,7 @@ public: //Methods.
 	{
 		this.nextSize = firstSegmentSizeWords;
 		this.allocationStrategy = allocationStrategy;
-		auto segment0 = SegmentBuilder(ByteBuffer.allocate(firstSegmentSizeWords * Constants.BYTES_PER_WORD), this);
-		segment0.buffer.order(ByteOrder.LITTLE_ENDIAN);
+		auto segment0 = SegmentBuilder(ByteBuffer(new ubyte[](firstSegmentSizeWords * Constants.BYTES_PER_WORD)), this);
 		this.segments ~= segment0;
 	}
 	
@@ -100,7 +98,7 @@ public: //Methods.
 		
 		//allocate_owned_memory.
 		auto size = max(amount, this.nextSize);
-		auto newSegment = SegmentBuilder(ByteBuffer.allocate(size * Constants.BYTES_PER_WORD), this);
+		auto newSegment = SegmentBuilder(ByteBuffer(new ubyte[](size * Constants.BYTES_PER_WORD)), this);
 		
 		switch(this.allocationStrategy) with(AllocationStrategy)
 		{
@@ -113,7 +111,6 @@ public: //Methods.
 		
 		// --------
 		
-		newSegment.buffer.order(ByteOrder.LITTLE_ENDIAN);
 		newSegment.id = cast(int)len;
 		this.segments ~= newSegment;
 		
@@ -128,8 +125,7 @@ public: //Methods.
 			auto segment = segments.data[ii];
 			segment.buffer.rewind();
 			auto slice = segment.buffer.slice();
-			slice.limit(segment.currentSize() * Constants.BYTES_PER_WORD);
-			slice.order(ByteOrder.LITTLE_ENDIAN);
+			slice.limit = segment.currentSize() * Constants.BYTES_PER_WORD;
 			result[ii] = slice;
 		}
 		return result;

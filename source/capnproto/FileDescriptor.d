@@ -30,7 +30,7 @@ public: //Methods.
 		if(dst.buffer is null)
 			dst.buffer = new ubyte[](dst.remaining);
 		file.rawRead(dst.buffer);
-		dst.position_ = dst.buffer.length;
+		dst.position = dst.buffer.length;
 		dst.limit = dst.buffer.length;
 		return dst.buffer.length;
 	}
@@ -39,7 +39,7 @@ public: //Methods.
 	size_t write(ref ByteBuffer src)
 	{
 		file.rawWrite(src.buffer[0..src.limit]);
-		src.position_ = src.limit;
+		src.position = src.limit;
 		return src.limit;
 	}
 

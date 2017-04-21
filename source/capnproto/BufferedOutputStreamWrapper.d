@@ -33,7 +33,7 @@ public: //Methods.
 	this(WritableByteChannel w)
 	{
 		this.inner = w;
-		this.buf = ByteBuffer.allocate(8192);
+		this.buf = ByteBuffer(new ubyte[](8192));
 	}
 	
 	size_t write(ref ByteBuffer src)
@@ -41,34 +41,34 @@ public: //Methods.
 		auto available = this.buf.remaining();
 		auto size = src.remaining();
 		if(size <= available)
-			this.buf.put(src);
+			this.buf.put!ByteBuffer(src);
 		else if(size <= this.buf.capacity())
 		{
 			//# Too much for this buffer, but not a full buffer's worth,
 			//# so we'll go ahead and copy.
 			auto slice = src.slice();
-			slice.limit(available);
-			this.buf.put(slice);
+			slice.limit = available;
+			this.buf.put!ByteBuffer(slice);
 			
 			this.buf.rewind();
-			while(this.buf.hasRemaining())
+			while(!this.buf.empty())
 				this.inner.write(this.buf);
 			this.buf.rewind();
 			
-			src.position(src.position() + available);
-			this.buf.put(src);
+			src.position += available;
+			this.buf.put!ByteBuffer(src);
 		}
 		else
 		{
 			//# Writing so much data that we might as well write
 			//# directly to avoid a copy.
-			auto pos = this.buf.position();
+			auto pos = this.buf.position;
 			this.buf.rewind();
 			auto slice = this.buf.slice();
-			slice.limit(pos);
-			while(slice.hasRemaining())
+			slice.limit = pos;
+			while(!slice.empty())
 				this.inner.write(slice);
-			while(src.hasRemaining())
+			while(!src.empty())
 				this.inner.write(src);
 		}
 		return size;
@@ -91,9 +91,9 @@ public: //Methods.
 	
 	void flush()
 	{
-		auto pos = this.buf.position();
+		auto pos = this.buf.position;
 		this.buf.rewind();
-		this.buf.limit(pos);
+		this.buf.limit = pos;
 		this.inner.write(this.buf);
 		this.buf.clear();
 	}

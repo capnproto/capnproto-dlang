@@ -33,8 +33,8 @@ public: //Methods.
 	this(ReadableByteChannel chan)
 	{
 		this.inner = chan;
-		this.buf = ByteBuffer.allocate(8192);
-		this.buf.limit(0);
+		this.buf = ByteBuffer(new ubyte[](8192));
+		this.buf.limit = 0;
 	}
 	
 	size_t read(ref ByteBuffer dst)
@@ -44,9 +44,9 @@ public: //Methods.
 		{
 			//# Serve from the current buffer.
 			auto slice = this.buf.slice();
-			slice.limit(numBytes);
-			dst.put(slice);
-			this.buf.position(this.buf.position() + numBytes);
+			slice.limit = numBytes;
+			dst.put!ByteBuffer(slice);
+			this.buf.position += numBytes;
 			return numBytes;
 		}
 		else
@@ -55,8 +55,8 @@ public: //Methods.
 			auto fromFirstBuffer = this.buf.remaining();
 			{
 				auto slice = this.buf.slice();
-				slice.limit(fromFirstBuffer);
-				dst.put(slice);
+				slice.limit = fromFirstBuffer;
+				dst.put!ByteBuffer(slice);
 			}
 			
 			numBytes -= fromFirstBuffer;
@@ -68,18 +68,18 @@ public: //Methods.
 				
 				this.buf.rewind();
 				auto slice = this.buf.slice();
-				slice.limit(numBytes);
-				dst.put(slice);
+				slice.limit = numBytes;
+				dst.put!ByteBuffer(slice);
 				
-				this.buf.limit(n);
-				this.buf.position(numBytes);
+				this.buf.limit = n;
+				this.buf.position = numBytes;
 				return fromFirstBuffer + numBytes;
 			}
 			else
 			{
 				//# Forward large read to the underlying stream.
 				this.buf.clear();
-				this.buf.limit(0);
+				this.buf.limit = 0;
 				return fromFirstBuffer + readAtLeast(this.inner, dst, numBytes);
 			}
 		}
@@ -92,7 +92,7 @@ public: //Methods.
 			this.buf.clear();
 			auto n = readAtLeast(this.inner, this.buf, 1);
 			this.buf.rewind();
-			this.buf.limit(n);
+			this.buf.limit = n;
 		}
 		return &this.buf;
 	}

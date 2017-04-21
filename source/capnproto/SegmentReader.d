@@ -29,7 +29,7 @@ import capnproto.Constants;
 struct SegmentReader
 {
 public: //Variables.
-	static immutable SegmentReader EMPTY = cast(immutable SegmentReader)SegmentReader(ByteBuffer.allocate(8), null);
+	static immutable SegmentReader EMPTY = cast(immutable SegmentReader)SegmentReader(ByteBuffer(new ubyte[](8)), null);
 	
 	ByteBuffer buffer;
 
@@ -42,7 +42,7 @@ public: //Methods.
 	
 	long get(size_t index) const
 	{
-		return buffer.getLong(index * Constants.BYTES_PER_WORD);
+		return buffer.get!long(index * Constants.BYTES_PER_WORD);
 	}
 
 package: //Variables.

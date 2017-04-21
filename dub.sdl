@@ -34,13 +34,13 @@ configuration "benchmark-eval" {
 }
 
 configuration "sample-addressbook" {
-    targetName "addressbook"
-    targetType "executable"
-    excludedSourceFiles "source/samples/mmap.d" "source/capnproto/benchmark/*" "source/capnproto/tests/*"
+	targetName "addressbook"
+	targetType "executable"
+	excludedSourceFiles "source/samples/mmap.d" "source/capnproto/benchmark/*" "source/capnproto/tests/*"
 }
 
 configuration "sample-mmap" {
-    targetName "mmap"
-    targetType "executable"
-    excludedSourceFiles "source/samples/test.d" "source/capnproto/benchmark/*" "source/capnproto/tests/*"
+	targetName "mmap"
+	targetType "executable"
+	excludedSourceFiles "source/samples/test.d" "source/capnproto/benchmark/*" "source/capnproto/tests/*"
 }

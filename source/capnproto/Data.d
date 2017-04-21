@@ -47,7 +47,7 @@ public: //Types.
 		
 		this(ubyte[] bytes)
 		{
-			this.buffer = ByteBuffer.wrap(bytes);
+			this.buffer = ByteBuffer(bytes);
 			this.offset = 0;
 			this.size = bytes.length;
 		}
@@ -59,20 +59,16 @@ public: //Types.
 		
 		ByteBuffer asByteBuffer()
 		{
-			auto dup = this.buffer.asReadOnlyBuffer();
-			dup.position(this.offset);
+			auto dup = this.buffer;
+			dup.position = this.offset;
 			auto result = dup.slice();
-			result.limit(this.size);
+			result.limit = this.size;
 			return result;
 		}
 		
 		ubyte[] toArray()
 		{
-			auto dup = this.buffer.duplicate();
-			auto result = new ubyte[](this.size);
-			dup.position(this.offset);
-			dup.get(result, 0, this.size);
-			return result;
+			return this.buffer[offset..offset+size];
 		}
 	}
 	
@@ -93,20 +89,16 @@ public: //Types.
 		
 		ByteBuffer asByteBuffer()
 		{
-			auto dup = this.buffer.duplicate();
-			dup.position(this.offset);
+			auto dup = this.buffer;
+			dup.position = this.offset;
 			auto result = dup.slice();
-			result.limit(this.size);
+			result.limit = this.size;
 			return result;
 		}
 		
 		ubyte[] toArray()
 		{
-			auto dup = this.buffer.duplicate();
-			auto result = new ubyte[](this.size);
-			dup.position(this.offset);
-			dup.get(result, 0, this.size);
-			return result;
+			return this.buffer[offset..offset+size];
 		}
 	}
 }

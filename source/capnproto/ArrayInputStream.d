@@ -35,12 +35,12 @@ public: //Variables.
 public: //Methods.
 	this(ByteBuffer buf)
 	{
-		this.buf = buf.asReadOnlyBuffer();
+		this.buf = buf;
 	}
 	
 	this(ref ubyte[] buf)
 	{
-		this.buf = ByteBuffer(buf).asReadOnlyBuffer();
+		this.buf = ByteBuffer(buf);
 	}
 	
 	size_t read(ref ByteBuffer dst)
@@ -49,11 +49,11 @@ public: //Methods.
 		auto size = min(dst.remaining(), this.buf.remaining());
 		
 		auto slice = this.buf.slice();
-		slice.limit(size);
+		slice.limit = size;
 		dst.buffer = slice.buffer;
-		dst.position_ += size;
+		dst.position += size;
+		this.buf.position += size;
 		
-		this.buf.position(this.buf.position() + size);
 		return size;
 	}
 	

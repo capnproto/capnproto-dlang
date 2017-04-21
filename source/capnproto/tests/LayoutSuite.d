@@ -22,7 +22,6 @@
 module capnproto.tests.LayoutSuite;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import capnproto;
 
@@ -31,8 +30,7 @@ unittest
 {
 	ubyte[] data = [ 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef ];
 	
-	auto buffer = ByteBuffer.wrap(data);
-	buffer.order(ByteOrder.LITTLE_ENDIAN);
+	auto buffer = ByteBuffer(data);
 	
 	auto arena = new ReaderArena([buffer], 0x7fffffffffffffffL);
 	
@@ -80,8 +78,7 @@ unittest
 //StructRoundTrip_OneSegment
 unittest
 {
-	auto buffer = ByteBuffer.allocate(1024 * 8);
-	buffer.order(ByteOrder.LITTLE_ENDIAN);
+	auto buffer = ByteBuffer(new ubyte[](1024 * 8));
 	
 	auto segment = SegmentBuilder(buffer, new BuilderArena(BuilderArena.SUGGESTED_FIRST_SEGMENT_WORDS, BuilderArena.SUGGESTED_ALLOCATION_STRATEGY));
 	auto builder = WireHelpers.initStructPointer!StructBuilder(0, &segment, cast(immutable)StructSize(2, 4));

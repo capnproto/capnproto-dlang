@@ -46,12 +46,12 @@ struct ListPointer
 	static void set(ref ByteBuffer buffer, int offset, byte elementSize, int elementCount)
 	{
 		//TODO: Length assertion.
-		buffer.putInt(8 * offset + 4, (elementCount << 3) | elementSize);
+		buffer.put!int(8 * offset + 4, (elementCount << 3) | elementSize);
 	}
 	
 	static void setInlineComposite(ref ByteBuffer buffer, int offset, int wordCount)
 	{
 		//TODO: Length assertion.
-		buffer.putInt(8 * offset + 4, (wordCount << 3) | ElementSize.INLINE_COMPOSITE);
+		buffer.put!int(8 * offset + 4, (wordCount << 3) | ElementSize.INLINE_COMPOSITE);
 	}
 }

@@ -40,9 +40,9 @@ public: //Methods.
 		auto length = inBuf.remaining();
 		auto out_ = this.inner.getWriteBuffer();
 		
-		auto slowBuffer = ByteBuffer.allocate(20);
+		auto slowBuffer = ByteBuffer(new ubyte[](20));
 		
-		auto inPtr = inBuf.position();
+		auto inPtr = inBuf.position;
 		auto inEnd = inPtr + length;
 		while(inPtr < inEnd)
 		{
@@ -54,34 +54,34 @@ public: //Methods.
 				
 				if(out_ is &slowBuffer)
 				{
-					auto oldLimit = out_.limit();
-					out_.limit(out_.position());
+					auto oldLimit = out_.limit;
+					out_.limit = out_.position;
 					out_.rewind();
 					this.inner.write(*out_);
-					out_.limit(oldLimit);
+					out_.limit = oldLimit;
 				}
 				out_ = &slowBuffer;
 				out_.rewind();
 			}
 			
-			auto tagPos = out_.position();
-			out_.position(tagPos + 1);
+			auto tagPos = out_.position;
+			out_.position = tagPos + 1;
 			
 			import std.meta;
 			ubyte bit0, bit1, bit2, bit3, bit4, bit5, bit6, bit7;
 			foreach(ref b; AliasSeq!(bit0, bit1, bit2, bit3, bit4, bit5, bit6, bit7))
 			{
-				ubyte curByte = inBuf.get(inPtr);
+				ubyte curByte = inBuf.get!ubyte(inPtr);
 				b = (curByte != 0)? cast(ubyte)1 : cast(ubyte)0;
-				out_.put(curByte);
-				out_.position(out_.position() + b - 1);
+				out_.put!ubyte(curByte);
+				out_.position += b - 1;
 				inPtr += 1;
 			}
 			
 			ubyte tag = cast(ubyte)((bit0 << 0) | (bit1 << 1) | (bit2 << 2) | (bit3 << 3) |
 			                        (bit4 << 4) | (bit5 << 5) | (bit6 << 6) | (bit7 << 7));
 			
-			out_.put(tagPos, tag);
+			out_.put!ubyte(tagPos, tag);
 			
 			if(tag == 0)
 			{
@@ -92,9 +92,9 @@ public: //Methods.
 				auto limit = inEnd;
 				if(limit - inPtr > 255 * 8)
 					limit = inPtr + 255 * 8;
-				while(inPtr < limit && inBuf.getLong(inPtr) == 0)
+				while(inPtr < limit && inBuf.get!long(inPtr) == 0)
 					inPtr += 8;
-				out_.put(cast(byte)((inPtr - runStart)/8));
+				out_.put!ubyte(cast(byte)((inPtr - runStart)/8));
 			}
 			else if(tag == 0xff)
 			{
@@ -117,7 +117,7 @@ public: //Methods.
 					byte c = 0;
 					foreach(ii; 0..8)
 					{
-						c += (inBuf.get(inPtr) == 0? 1 : 0);
+						c += (inBuf.get!byte(inPtr) == 0? 1 : 0);
 						inPtr += 1;
 					}
 					if(c >= 2)
@@ -130,15 +130,15 @@ public: //Methods.
 				}
 				
 				auto count = inPtr - runStart;
-				out_.put(cast(byte)(count / 8));
+				out_.put!ubyte(cast(byte)(count / 8));
 				
 				if(count <= out_.remaining())
 				{
 					//# There's enough space to memcpy.
-					inBuf.position(runStart);
+					inBuf.position = runStart;
 					ByteBuffer slice = inBuf.slice();
-					slice.limit(count);
-					out_.put(slice);
+					slice.limit = count;
+					out_.put!ByteBuffer(slice);
 				}
 				else
 				{
@@ -148,17 +148,17 @@ public: //Methods.
 					
 					if(out_ is &slowBuffer)
 					{
-						auto oldLimit = out_.limit();
-						out_.limit(out_.position());
+						auto oldLimit = out_.limit;
+						out_.limit = out_.position;
 						out_.rewind();
 						this.inner.write(*out_);
-						out_.limit(oldLimit);
+						out_.limit = oldLimit;
 					}
 					
-					inBuf.position(runStart);
+					inBuf.position = runStart;
 					ByteBuffer slice = inBuf.slice();
-					slice.limit(count);
-					while(slice.hasRemaining())
+					slice.limit = count;
+					while(!slice.empty())
 						this.inner.write(slice);
 					out_ = this.inner.getWriteBuffer();
 				}
@@ -167,12 +167,12 @@ public: //Methods.
 		
 		if(out_ is &slowBuffer)
 		{
-			out_.limit(out_.position());
+			out_.limit = out_.position;
 			out_.rewind();
 			this.inner.write(*out_);
 		}
 		
-		inBuf.position(inPtr);
+		inBuf.position = inPtr;
 		return length;
 	}
 	

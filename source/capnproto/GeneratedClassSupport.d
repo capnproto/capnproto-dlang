@@ -22,7 +22,6 @@
 module capnproto.GeneratedClassSupport;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import capnproto.AnyPointer;
 import capnproto.Data;
@@ -35,7 +34,7 @@ struct GeneratedClassSupport
 	static SegmentReader decodeRawBytes(ubyte[] s)
 	{
 		ByteBuffer[] bb;
-		return SegmentReader(ByteBuffer.wrap(s), new ReaderArena(bb, 0x7fffffffffffffffL));
+		return SegmentReader(ByteBuffer(s), new ReaderArena(bb, 0x7fffffffffffffffL));
 	}
 	
 	struct Const(T)

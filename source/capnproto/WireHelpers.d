@@ -235,13 +235,13 @@ package:
 						auto otherSegment = segment.getArena().getSegment(FarPointer.getSegmentId(ref_));
 						if(otherSegment.isWritable())
 							zeroObject(otherSegment, padOffset + 1, FarPointer.positionInSegment(pad));
-						segment.buffer.putLong(padOffset * 8, 0L);
-						segment.buffer.putLong((padOffset + 1) * 8, 0L);
+						segment.buffer.put!long(padOffset * 8, 0L);
+						segment.buffer.put!long((padOffset + 1) * 8, 0L);
 					}
 					else
 					{
 						zeroObject(segment, padOffset);
-						segment.buffer.putLong(padOffset * 8, 0L);
+						segment.buffer.put!long(padOffset * 8, 0L);
 					}
 				}
 				break;
@@ -339,9 +339,9 @@ package:
 			if(padSegment.isWritable()) //# Don't zero external data.
 			{
 				int padOffset = FarPointer.positionInSegment(ref_);
-				padSegment.buffer.putLong(padOffset * Constants.BYTES_PER_WORD, 0L);
+				padSegment.buffer.put!long(padOffset * Constants.BYTES_PER_WORD, 0L);
 				if(FarPointer.isDoubleFar(ref_))
-					padSegment.buffer.putLong(padOffset * Constants.BYTES_PER_WORD + 1, 0L);
+					padSegment.buffer.put!long(padOffset * Constants.BYTES_PER_WORD + 1, 0L);
 			}
 		}
 		segment.put(refOffset, 0L);
@@ -388,7 +388,7 @@ package:
 				WirePointer.setKindAndTarget(dstSegment.buffer, dstOffset, WirePointer.kind(src), srcTargetOffset);
 			
 			//We can just copy the upper 32 bits.
-			dstSegment.buffer.putInt(dstOffset * Constants.BYTES_PER_WORD + 4, srcSegment.buffer.getInt(srcOffset * Constants.BYTES_PER_WORD + 4));
+			dstSegment.buffer.put!int(dstOffset * Constants.BYTES_PER_WORD + 4, srcSegment.buffer.get!int(srcOffset * Constants.BYTES_PER_WORD + 4));
 		}
 		else
 		{
@@ -409,7 +409,7 @@ package:
 				
 				WirePointer.setKindWithZeroOffset(farSegment.buffer, landingPadOffset + 1, WirePointer.kind(src));
 				
-				farSegment.buffer.putInt((landingPadOffset + 1) * Constants.BYTES_PER_WORD + 4, srcSegment.buffer.getInt(srcOffset * Constants.BYTES_PER_WORD + 4));
+				farSegment.buffer.put!int((landingPadOffset + 1) * Constants.BYTES_PER_WORD + 4, srcSegment.buffer.get!int(srcOffset * Constants.BYTES_PER_WORD + 4));
 				
 				FarPointer.set(dstSegment.buffer, dstOffset, true, landingPadOffset);
 				FarPointer.setSegmentId(dstSegment.buffer, dstOffset, farSegment.id);
@@ -419,7 +419,7 @@ package:
 				//# Simple landing pad is just a pointer.
 				
 				WirePointer.setKindAndTarget(srcSegment.buffer, landingPadOffset, WirePointer.kind(srcTarget), srcTargetOffset);
-				srcSegment.buffer.putInt(landingPadOffset * Constants.BYTES_PER_WORD + 4, srcSegment.buffer.getInt(srcOffset * Constants.BYTES_PER_WORD + 4));
+				srcSegment.buffer.put!int(landingPadOffset * Constants.BYTES_PER_WORD + 4, srcSegment.buffer.get!int(srcOffset * Constants.BYTES_PER_WORD + 4));
 				
 				FarPointer.set(dstSegment.buffer, dstOffset, false, landingPadOffset);
 				FarPointer.setSegmentId(dstSegment.buffer, dstOffset, srcSegment.id);
@@ -737,11 +737,11 @@ package:
 	{
 		Text.Builder builder = initTextPointer(refOffset, segment, cast(int)value.size);
 		
-		auto slice = value.buffer.duplicate();
-		slice.position(value.offset);
-		slice.limit(value.offset + value.size);
-		builder.buffer.position(builder.offset);
-		builder.buffer.put(slice);
+		auto slice = value.buffer;
+		slice.position = value.offset;
+		slice.limit = value.offset + value.size;
+		builder.buffer.position = builder.offset;
+		builder.buffer.put!ByteBuffer(slice);
 		return builder;
 	}
 
@@ -767,7 +767,7 @@ package:
 			throw new DecodeException("Called getText{Field,Element} but existing list pointer is not byte-sized.");
 		
 		int size = ListPointer.elementCount(resolved.ref_);
-		if(size == 0 || resolved.segment.buffer.get(resolved.ptr * Constants.BYTES_PER_WORD + size - 1) != 0)
+		if(size == 0 || resolved.segment.buffer.get!ubyte(resolved.ptr * Constants.BYTES_PER_WORD + size - 1) != 0)
 			throw new DecodeException("Text blob missing NUL terminator.");
 		return Text.Builder(resolved.segment.buffer, resolved.ptr * Constants.BYTES_PER_WORD, size - 1);
 	}
@@ -790,7 +790,7 @@ package:
 		
 		//TODO: Is there a way to do this with bulk methods?
 		foreach(i; 0..builder.size)
-			builder.buffer.put(builder.offset + i, value.buffer.get(value.offset + i));
+			builder.buffer.put!ubyte(builder.offset + i, value.buffer.get!ubyte(value.offset + i));
 		return builder;
 	}
 
@@ -805,7 +805,7 @@ package:
 			auto builder = initDataPointer(refOffset, segment, defaultSize);
 			//TODO: Is there a way to do this with bulk methods?
 			foreach(i; 0..builder.size)
-				builder.buffer.put(builder.offset + i, defaultBuffer.get(defaultOffset * 8 + i));
+				builder.buffer.put!ubyte(builder.offset + i, defaultBuffer.get!ubyte(defaultOffset * 8 + i));
 			return builder;
 		}
 		
@@ -950,13 +950,13 @@ package:
 	
 	static void memcpy(ref ByteBuffer dstBuffer, int dstByteOffset, ref ByteBuffer srcBuffer, int srcByteOffset, int length)
 	{
-		auto dstDup = dstBuffer.duplicate();
-		dstDup.position(dstByteOffset);
-		dstDup.limit(dstByteOffset + length);
-		auto srcDup = srcBuffer.duplicate();
-		srcDup.position(srcByteOffset);
-		srcDup.limit(srcByteOffset + length);
-		dstDup.put(srcDup);
+		auto dstDup = dstBuffer;
+		dstDup.position = dstByteOffset;
+		dstDup.limit = dstByteOffset + length;
+		auto srcDup = srcBuffer;
+		srcDup.position = srcByteOffset;
+		srcDup.limit = srcByteOffset + length;
+		dstDup.put!ByteBuffer(srcDup);
 	}
 	
 	static SegmentBuilder* copyPointer(SegmentBuilder* dstSegment, int dstOffset, SegmentReader* srcSegment, int srcOffset, int nestingLimit)
@@ -969,7 +969,7 @@ package:
 		
 		if(WirePointer.isNull(srcRef))
 		{
-			dstSegment.buffer.putLong(dstOffset * 8, 0L);
+			dstSegment.buffer.put!long(dstOffset * 8, 0L);
 			return dstSegment;
 		}
 		
@@ -1130,10 +1130,10 @@ package:
 			throw new DecodeException("Message contains list with incompatible element type.");
 		if(expectedPointersPerElement > pointerCount)
 			throw new DecodeException("Message contains list with incompatible element type.");
-
+		
 		return T(resolved.segment, resolved.ptr * Constants.BYTES_PER_WORD, ListPointer.elementCount(resolved.ref_), step, dataSize, cast(short)pointerCount, nestingLimit - 1);
 	}
-
+	
 	static Text.Reader readTextPointer(SegmentReader* segment, int refOffset, ByteBuffer* defaultBuffer, int defaultOffset, int defaultSize)
 	{
 		long ref_ = segment.get(refOffset);
@@ -1159,7 +1159,7 @@ package:
 		
 		resolved.segment.arena.checkReadLimit(roundBytesUpToWords(size));
 		
-		if(size == 0 || resolved.segment.buffer.get(8 * resolved.ptr + size - 1) != 0)
+		if(size == 0 || resolved.segment.buffer.get!ubyte(8 * resolved.ptr + size - 1) != 0)
 			throw new DecodeException("Message contains text that is not NUL-terminated.");
 		
 		return Text.Reader(resolved.segment.buffer, resolved.ptr, size - 1);

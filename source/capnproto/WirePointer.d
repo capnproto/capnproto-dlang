@@ -56,12 +56,12 @@ public: //Methods.
 	
 	static void setKindAndTarget(ref ByteBuffer buffer, int offset, byte kind, int targetOffset)
 	{
-		buffer.putInt(offset * 8, (((targetOffset - offset) - 1) << 2) | kind);
+		buffer.put!int(offset * 8, (((targetOffset - offset) - 1) << 2) | kind);
 	}
 	
 	static void setKindWithZeroOffset(ref ByteBuffer buffer, int offset, byte kind)
 	{
-		buffer.putInt(offset * Constants.BYTES_PER_WORD, kind);
+		buffer.put!int(offset * Constants.BYTES_PER_WORD, kind);
 	}
 	
 	static void setKindAndTargetForEmptyStruct(ref ByteBuffer buffer, int offset)
@@ -75,12 +75,12 @@ public: //Methods.
 		//# allocated immediately before this pointer, to distinguish
 		//# it from null.
 		
-		buffer.putInt(offset * 8, 0xfffffffc);
+		buffer.put!int(offset * 8, 0xfffffffc);
 	}
 	
 	static void setOffsetAndKind(ref ByteBuffer buffer, int offset, int offsetAndKind)
 	{
-		buffer.putInt(offset * 8, offsetAndKind);
+		buffer.put!int(offset * 8, offsetAndKind);
 	}
 	
 	static int inlineCompositeListElementCount(long wirePointer)
@@ -91,7 +91,7 @@ public: //Methods.
 	static void setKindAndInlineCompositeListElementCount(ref ByteBuffer buffer, int offset, byte kind, int elementCount)
 	{
 		int lval = (elementCount << 2) | kind;
-		buffer.putInt(offset * 8, (elementCount << 2) | kind);
+		buffer.put!int(offset * 8, (elementCount << 2) | kind);
 	}
 	
 	static int upper32Bits(long wirePointer)
