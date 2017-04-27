@@ -323,17 +323,21 @@ private:
       case schema::Type::BOOL:
         return kj::strTree("PrimitiveList!bool", suffix != nullptr? "." : "", suffix);
       case schema::Type::INT8:
-      case schema::Type::UINT8:
         return kj::strTree("PrimitiveList!byte", suffix != nullptr? "." : "", suffix);
+      case schema::Type::UINT8:
+        return kj::strTree("PrimitiveList!ubyte", suffix != nullptr? "." : "", suffix);
       case schema::Type::INT16:
-      case schema::Type::UINT16:
         return kj::strTree("PrimitiveList!short", suffix != nullptr? "." : "", suffix);
+      case schema::Type::UINT16:
+        return kj::strTree("PrimitiveList!ushort", suffix != nullptr? "." : "", suffix);
       case schema::Type::INT32:
-      case schema::Type::UINT32:
         return kj::strTree("PrimitiveList!int", suffix != nullptr? "." : "", suffix);
+      case schema::Type::UINT32:
+        return kj::strTree("PrimitiveList!uint", suffix != nullptr? "." : "", suffix);
       case schema::Type::INT64:
-      case schema::Type::UINT64:
         return kj::strTree("PrimitiveList!long", suffix != nullptr? "." : "", suffix);
+      case schema::Type::UINT64:
+        return kj::strTree("PrimitiveList!ulong", suffix != nullptr? "." : "", suffix);
       case schema::Type::FLOAT32:
         return kj::strTree("PrimitiveList!float", suffix != nullptr? "." : "", suffix);
       case schema::Type::FLOAT64:

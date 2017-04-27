@@ -34,13 +34,13 @@ struct PrimitiveList(Type)
 		enum elementSize = ElementSize.VOID;
 	else static if(is(Type == bool))
 		enum elementSize = ElementSize.BIT;
-	else static if(is(Type == byte))
+	else static if(is(Type == byte) || is(Type == ubyte))
 		enum elementSize = ElementSize.BYTE;
-	else static if(is(Type == short))
+	else static if(is(Type == short) || is(Type == ushort))
 		enum elementSize = ElementSize.TWO_BYTES;
-	else static if(is(Type == int) || is(Type == float))
+	else static if(is(Type == int) || is(Type == uint) || is(Type == float))
 		enum elementSize = ElementSize.FOUR_BYTES;
-	else static if(is(Type == long) || is(Type == double))
+	else static if(is(Type == long) || is(Type == ulong) || is(Type == double))
 		enum elementSize = ElementSize.EIGHT_BYTES;
 	
 	static struct Reader
@@ -56,7 +56,7 @@ struct PrimitiveList(Type)
 			return b.length;
 		}
 		
-		Type get(int index)
+		Type get(size_t index)
 		{
 			static if(is(Type == Void))
 				return .Void.VOID;
@@ -64,36 +64,53 @@ struct PrimitiveList(Type)
 				return b._getBooleanElement(index);
 			else static if(is(Type == byte))
 				return b._getByteElement(index);
+			else static if(is(Type == ubyte))
+				return cast(ubyte)b._getByteElement(index);
 			else static if(is(Type == short))
 				return b._getShortElement(index);
+			else static if(is(Type == ushort))
+				return cast(ushort)b._getShortElement(index);
 			else static if(is(Type == int))
 				return b._getIntElement(index);
+			else static if(is(Type == uint))
+				return cast(uint)b._getIntElement(index);
 			else static if(is(Type == float))
 				return b._getFloatElement(index);
 			else static if(is(Type == double))
 				return b._getDoubleElement(index);
 			else static if(is(Type == long))
 				return b._getLongElement(index);
+			else static if(is(Type == ulong))
+				return cast(ulong)b._getLongElement(index);
 		}
 		
 		Type opIndex(size_t index)
 		{
-			static if(is(Type == Void))
-				return .Void.VOID;
-			else static if(is(Type == bool))
-				return b._getBooleanElement(cast(int)index);
-			else static if(is(Type == byte))
-				return b._getByteElement(cast(int)index);
-			else static if(is(Type == short))
-				return b._getShortElement(cast(int)index);
-			else static if(is(Type == int))
-				return b._getIntElement(cast(int)index);
-			else static if(is(Type == float))
-				return b._getFloatElement(cast(int)index);
-			else static if(is(Type == double))
-				return b._getDoubleElement(cast(int)index);
-			else static if(is(Type == long))
-				return b._getLongElement(cast(int)index);
+			return get(index);
+		}
+		
+		int opApply(scope int delegate(Type) dg)
+		{
+			int result = 0;
+			foreach(i; 0..b.length)
+			{
+				result = dg(opIndex(i));
+				if(result)
+					break;
+			}
+			return result;
+		}
+		
+		int opApply(scope int delegate(size_t,Type) dg)
+		{
+			int result = 0;
+			foreach(i; 0..b.length)
+			{
+				result = dg(i, opIndex(i));
+				if(result)
+					break;
+			}
+			return result;
 		}
 	
 	package: //Variables.
@@ -113,7 +130,7 @@ struct PrimitiveList(Type)
 			return b.length;
 		}
 		
-		Type get(int index)
+		Type get(size_t index)
 		{
 			static if(is(Type == Void))
 				return .Void.VOID;
@@ -121,36 +138,29 @@ struct PrimitiveList(Type)
 				return b._getBooleanElement(index);
 			else static if(is(Type == byte))
 				return b._getByteElement(index);
+			else static if(is(Type == ubyte))
+				return cast(ubyte)b._getByteElement(index);
 			else static if(is(Type == short))
 				return b._getShortElement(index);
+			else static if(is(Type == ushort))
+				return cast(ushort)b._getShortElement(index);
 			else static if(is(Type == int))
 				return b._getIntElement(index);
+			else static if(is(Type == uint))
+				return cast(uint)b._getIntElement(index);
 			else static if(is(Type == float))
 				return b._getFloatElement(index);
 			else static if(is(Type == double))
 				return b._getDoubleElement(index);
 			else static if(is(Type == long))
 				return b._getLongElement(index);
+			else static if(is(Type == ulong))
+				return cast(ulong)b._getLongElement(index);
 		}
 		
 		Type opIndex(size_t index)
 		{
-			static if(is(Type == Void))
-				return .Void.VOID;
-			else static if(is(Type == bool))
-				return b._getBooleanElement(cast(int)index);
-			else static if(is(Type == byte))
-				return b._getByteElement(cast(int)index);
-			else static if(is(Type == short))
-				return b._getShortElement(cast(int)index);
-			else static if(is(Type == int))
-				return b._getIntElement(cast(int)index);
-			else static if(is(Type == float))
-				return b._getFloatElement(cast(int)index);
-			else static if(is(Type == double))
-				return b._getDoubleElement(cast(int)index);
-			else static if(is(Type == long))
-				return b._getLongElement(cast(int)index);
+			return get(index);
 		}
 		
 		void set(int index, Type value)
@@ -161,15 +171,23 @@ struct PrimitiveList(Type)
 				b._setBooleanElement(index, value);
 			else static if(is(Type == byte))
 				b._setByteElement(index, value);
+			else static if(is(Type == ubyte))
+				b._setByteElement(index, value);
 			else static if(is(Type == short))
 				b._setShortElement(index, value);
+			else static if(is(Type == ushort))
+				b._setShortElement(index, value);
 			else static if(is(Type == int))
+				b._setIntElement(index, value);
+			else static if(is(Type == uint))
 				b._setIntElement(index, value);
 			else static if(is(Type == float))
 				b._setFloatElement(index, value);
 			else static if(is(Type == double))
 				b._setDoubleElement(index, value);
 			else static if(is(Type == long))
+				b._setLongElement(index, value);
+			else static if(is(Type == ulong))
 				b._setLongElement(index, value);
 		}
 	
