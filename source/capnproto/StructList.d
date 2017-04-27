@@ -70,6 +70,18 @@ public: //Types.
 			}
 			return result;
 		}
+		
+		int opApply(scope int delegate(size_t,T.Reader) dg)
+		{
+			int result = 0;
+			foreach(i; 0..b.length)
+			{
+				result = dg(i, b._getStructElement!T(i));
+				if(result)
+					break;
+			}
+			return result;
+		}
 	
 	package: //Variables.
 		ListReader b;
