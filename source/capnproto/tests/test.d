@@ -41,7 +41,7 @@ public:
 		{
 			return Void.VOID;
 		}
-		void setVoidField(Void value)
+		void setVoidField()
 		{
 		}
 		
@@ -223,7 +223,7 @@ public:
 		{
 			return Void.VOID;
 		}
-		void setInterfaceField(Void value)
+		void setInterfaceField()
 		{
 		}
 		
@@ -333,68 +333,68 @@ public:
 		{
 			return !b._pointerFieldIsNull(9);
 		}
-		PrimitiveList!byte.Builder getUInt8List()
+		PrimitiveList!ubyte.Builder getUInt8List()
 		{
-			return b._getPointerField!(PrimitiveList!byte)(9, null, 0);
+			return b._getPointerField!(PrimitiveList!ubyte)(9, null, 0);
 		}
-		void setUInt8List(PrimitiveList!byte.Reader value)
+		void setUInt8List(PrimitiveList!ubyte.Reader value)
 		{
-			b._setPointerField!(PrimitiveList!byte)(9, value);
+			b._setPointerField!(PrimitiveList!ubyte)(9, value);
 		}
-		PrimitiveList!byte.Builder initUInt8List(int size)
+		PrimitiveList!ubyte.Builder initUInt8List(int size)
 		{
-			return b._initPointerField!(PrimitiveList!byte)(9, size);
+			return b._initPointerField!(PrimitiveList!ubyte)(9, size);
 		}
 		
 		bool hasUInt16List()
 		{
 			return !b._pointerFieldIsNull(10);
 		}
-		PrimitiveList!short.Builder getUInt16List()
+		PrimitiveList!ushort.Builder getUInt16List()
 		{
-			return b._getPointerField!(PrimitiveList!short)(10, null, 0);
+			return b._getPointerField!(PrimitiveList!ushort)(10, null, 0);
 		}
-		void setUInt16List(PrimitiveList!short.Reader value)
+		void setUInt16List(PrimitiveList!ushort.Reader value)
 		{
-			b._setPointerField!(PrimitiveList!short)(10, value);
+			b._setPointerField!(PrimitiveList!ushort)(10, value);
 		}
-		PrimitiveList!short.Builder initUInt16List(int size)
+		PrimitiveList!ushort.Builder initUInt16List(int size)
 		{
-			return b._initPointerField!(PrimitiveList!short)(10, size);
+			return b._initPointerField!(PrimitiveList!ushort)(10, size);
 		}
 		
 		bool hasUInt32List()
 		{
 			return !b._pointerFieldIsNull(11);
 		}
-		PrimitiveList!int.Builder getUInt32List()
+		PrimitiveList!uint.Builder getUInt32List()
 		{
-			return b._getPointerField!(PrimitiveList!int)(11, null, 0);
+			return b._getPointerField!(PrimitiveList!uint)(11, null, 0);
 		}
-		void setUInt32List(PrimitiveList!int.Reader value)
+		void setUInt32List(PrimitiveList!uint.Reader value)
 		{
-			b._setPointerField!(PrimitiveList!int)(11, value);
+			b._setPointerField!(PrimitiveList!uint)(11, value);
 		}
-		PrimitiveList!int.Builder initUInt32List(int size)
+		PrimitiveList!uint.Builder initUInt32List(int size)
 		{
-			return b._initPointerField!(PrimitiveList!int)(11, size);
+			return b._initPointerField!(PrimitiveList!uint)(11, size);
 		}
 		
 		bool hasUInt64List()
 		{
 			return !b._pointerFieldIsNull(12);
 		}
-		PrimitiveList!long.Builder getUInt64List()
+		PrimitiveList!ulong.Builder getUInt64List()
 		{
-			return b._getPointerField!(PrimitiveList!long)(12, null, 0);
+			return b._getPointerField!(PrimitiveList!ulong)(12, null, 0);
 		}
-		void setUInt64List(PrimitiveList!long.Reader value)
+		void setUInt64List(PrimitiveList!ulong.Reader value)
 		{
-			b._setPointerField!(PrimitiveList!long)(12, value);
+			b._setPointerField!(PrimitiveList!ulong)(12, value);
 		}
-		PrimitiveList!long.Builder initUInt64List(int size)
+		PrimitiveList!ulong.Builder initUInt64List(int size)
 		{
-			return b._initPointerField!(PrimitiveList!long)(12, size);
+			return b._initPointerField!(PrimitiveList!ulong)(12, size);
 		}
 		
 		bool hasFloat32List()
@@ -677,36 +677,36 @@ public:
 		{
 			return !b._pointerFieldIsNull(9);
 		}
-		PrimitiveList!byte.Reader getUInt8List()
+		PrimitiveList!ubyte.Reader getUInt8List()
 		{
-			return b._getPointerField!(PrimitiveList!byte)(9, null, 0);
+			return b._getPointerField!(PrimitiveList!ubyte)(9, null, 0);
 		}
 		
 		bool hasUInt16List()
 		{
 			return !b._pointerFieldIsNull(10);
 		}
-		PrimitiveList!short.Reader getUInt16List()
+		PrimitiveList!ushort.Reader getUInt16List()
 		{
-			return b._getPointerField!(PrimitiveList!short)(10, null, 0);
+			return b._getPointerField!(PrimitiveList!ushort)(10, null, 0);
 		}
 		
 		bool hasUInt32List()
 		{
 			return !b._pointerFieldIsNull(11);
 		}
-		PrimitiveList!int.Reader getUInt32List()
+		PrimitiveList!uint.Reader getUInt32List()
 		{
-			return b._getPointerField!(PrimitiveList!int)(11, null, 0);
+			return b._getPointerField!(PrimitiveList!uint)(11, null, 0);
 		}
 		
 		bool hasUInt64List()
 		{
 			return !b._pointerFieldIsNull(12);
 		}
-		PrimitiveList!long.Reader getUInt64List()
+		PrimitiveList!ulong.Reader getUInt64List()
 		{
-			return b._getPointerField!(PrimitiveList!long)(12, null, 0);
+			return b._getPointerField!(PrimitiveList!ulong)(12, null, 0);
 		}
 		
 		bool hasFloat32List()
@@ -792,7 +792,7 @@ public:
 		{
 			return Void.VOID;
 		}
-		void setVoidField(Void value)
+		void setVoidField()
 		{
 		}
 		
@@ -974,7 +974,7 @@ public:
 		{
 			return Void.VOID;
 		}
-		void setInterfaceField(Void value)
+		void setInterfaceField()
 		{
 		}
 		
@@ -1084,68 +1084,68 @@ public:
 		{
 			return !b._pointerFieldIsNull(9);
 		}
-		PrimitiveList!byte.Builder getUInt8List()
+		PrimitiveList!ubyte.Builder getUInt8List()
 		{
-			return b._getPointerField!(PrimitiveList!byte)(9, &Schemas.b_e37a20a013e0cd99, 707);
+			return b._getPointerField!(PrimitiveList!ubyte)(9, &Schemas.b_e37a20a013e0cd99, 707);
 		}
-		void setUInt8List(PrimitiveList!byte.Reader value)
+		void setUInt8List(PrimitiveList!ubyte.Reader value)
 		{
-			b._setPointerField!(PrimitiveList!byte)(9, value);
+			b._setPointerField!(PrimitiveList!ubyte)(9, value);
 		}
-		PrimitiveList!byte.Builder initUInt8List(int size)
+		PrimitiveList!ubyte.Builder initUInt8List(int size)
 		{
-			return b._initPointerField!(PrimitiveList!byte)(9, size);
+			return b._initPointerField!(PrimitiveList!ubyte)(9, size);
 		}
 		
 		bool hasUInt16List()
 		{
 			return !b._pointerFieldIsNull(10);
 		}
-		PrimitiveList!short.Builder getUInt16List()
+		PrimitiveList!ushort.Builder getUInt16List()
 		{
-			return b._getPointerField!(PrimitiveList!short)(10, &Schemas.b_e37a20a013e0cd99, 721);
+			return b._getPointerField!(PrimitiveList!ushort)(10, &Schemas.b_e37a20a013e0cd99, 721);
 		}
-		void setUInt16List(PrimitiveList!short.Reader value)
+		void setUInt16List(PrimitiveList!ushort.Reader value)
 		{
-			b._setPointerField!(PrimitiveList!short)(10, value);
+			b._setPointerField!(PrimitiveList!ushort)(10, value);
 		}
-		PrimitiveList!short.Builder initUInt16List(int size)
+		PrimitiveList!ushort.Builder initUInt16List(int size)
 		{
-			return b._initPointerField!(PrimitiveList!short)(10, size);
+			return b._initPointerField!(PrimitiveList!ushort)(10, size);
 		}
 		
 		bool hasUInt32List()
 		{
 			return !b._pointerFieldIsNull(11);
 		}
-		PrimitiveList!int.Builder getUInt32List()
+		PrimitiveList!uint.Builder getUInt32List()
 		{
-			return b._getPointerField!(PrimitiveList!int)(11, &Schemas.b_e37a20a013e0cd99, 735);
+			return b._getPointerField!(PrimitiveList!uint)(11, &Schemas.b_e37a20a013e0cd99, 735);
 		}
-		void setUInt32List(PrimitiveList!int.Reader value)
+		void setUInt32List(PrimitiveList!uint.Reader value)
 		{
-			b._setPointerField!(PrimitiveList!int)(11, value);
+			b._setPointerField!(PrimitiveList!uint)(11, value);
 		}
-		PrimitiveList!int.Builder initUInt32List(int size)
+		PrimitiveList!uint.Builder initUInt32List(int size)
 		{
-			return b._initPointerField!(PrimitiveList!int)(11, size);
+			return b._initPointerField!(PrimitiveList!uint)(11, size);
 		}
 		
 		bool hasUInt64List()
 		{
 			return !b._pointerFieldIsNull(12);
 		}
-		PrimitiveList!long.Builder getUInt64List()
+		PrimitiveList!ulong.Builder getUInt64List()
 		{
-			return b._getPointerField!(PrimitiveList!long)(12, &Schemas.b_e37a20a013e0cd99, 749);
+			return b._getPointerField!(PrimitiveList!ulong)(12, &Schemas.b_e37a20a013e0cd99, 749);
 		}
-		void setUInt64List(PrimitiveList!long.Reader value)
+		void setUInt64List(PrimitiveList!ulong.Reader value)
 		{
-			b._setPointerField!(PrimitiveList!long)(12, value);
+			b._setPointerField!(PrimitiveList!ulong)(12, value);
 		}
-		PrimitiveList!long.Builder initUInt64List(int size)
+		PrimitiveList!ulong.Builder initUInt64List(int size)
 		{
-			return b._initPointerField!(PrimitiveList!long)(12, size);
+			return b._initPointerField!(PrimitiveList!ulong)(12, size);
 		}
 		
 		bool hasFloat32List()
@@ -1445,36 +1445,36 @@ public:
 		{
 			return !b._pointerFieldIsNull(9);
 		}
-		PrimitiveList!byte.Reader getUInt8List()
+		PrimitiveList!ubyte.Reader getUInt8List()
 		{
-			return b._getPointerField!(PrimitiveList!byte)(9, &Schemas.b_e37a20a013e0cd99, 707);
+			return b._getPointerField!(PrimitiveList!ubyte)(9, &Schemas.b_e37a20a013e0cd99, 707);
 		}
 		
 		bool hasUInt16List()
 		{
 			return !b._pointerFieldIsNull(10);
 		}
-		PrimitiveList!short.Reader getUInt16List()
+		PrimitiveList!ushort.Reader getUInt16List()
 		{
-			return b._getPointerField!(PrimitiveList!short)(10, &Schemas.b_e37a20a013e0cd99, 721);
+			return b._getPointerField!(PrimitiveList!ushort)(10, &Schemas.b_e37a20a013e0cd99, 721);
 		}
 		
 		bool hasUInt32List()
 		{
 			return !b._pointerFieldIsNull(11);
 		}
-		PrimitiveList!int.Reader getUInt32List()
+		PrimitiveList!uint.Reader getUInt32List()
 		{
-			return b._getPointerField!(PrimitiveList!int)(11, &Schemas.b_e37a20a013e0cd99, 735);
+			return b._getPointerField!(PrimitiveList!uint)(11, &Schemas.b_e37a20a013e0cd99, 735);
 		}
 		
 		bool hasUInt64List()
 		{
 			return !b._pointerFieldIsNull(12);
 		}
-		PrimitiveList!long.Reader getUInt64List()
+		PrimitiveList!ulong.Reader getUInt64List()
 		{
-			return b._getPointerField!(PrimitiveList!long)(12, &Schemas.b_e37a20a013e0cd99, 749);
+			return b._getPointerField!(PrimitiveList!ulong)(12, &Schemas.b_e37a20a013e0cd99, 749);
 		}
 		
 		bool hasFloat32List()
@@ -2191,7 +2191,7 @@ public:
 				assert(which() == TestUnion.Union0.Which.u0f0s0, "Must check which() before get()ing a union member.");
 				return Void.VOID;
 			}
-			void setU0f0s0(Void value)
+			void setU0f0s0()
 			{
 				b._setShortField(0, cast(ushort)TestUnion.Union0.Which.u0f0s0);
 			}
@@ -2309,7 +2309,7 @@ public:
 				assert(which() == TestUnion.Union0.Which.u0f1s0, "Must check which() before get()ing a union member.");
 				return Void.VOID;
 			}
-			void setU0f1s0(Void value)
+			void setU0f1s0()
 			{
 				b._setShortField(0, cast(ushort)TestUnion.Union0.Which.u0f1s0);
 			}
@@ -2426,19 +2426,19 @@ public:
 			{
 				return !b._pointerFieldIsNull(0);
 			}
-			PrimitiveList!int.Builder getPrimitiveList()
+			PrimitiveList!uint.Builder getPrimitiveList()
 			{
-				return b._getPointerField!(PrimitiveList!int)(0, null, 0);
+				return b._getPointerField!(PrimitiveList!uint)(0, null, 0);
 			}
-			void setPrimitiveList(PrimitiveList!int.Reader value)
+			void setPrimitiveList(PrimitiveList!uint.Reader value)
 			{
 				b._setShortField(0, cast(ushort)TestUnion.Union0.Which.primitiveList);
-				b._setPointerField!(PrimitiveList!int)(0, value);
+				b._setPointerField!(PrimitiveList!uint)(0, value);
 			}
-			PrimitiveList!int.Builder initPrimitiveList(int size)
+			PrimitiveList!uint.Builder initPrimitiveList(int size)
 			{
 				b._setShortField(0, cast(ushort)TestUnion.Union0.Which.primitiveList);
-				return b._initPointerField!(PrimitiveList!int)(0, size);
+				return b._initPointerField!(PrimitiveList!uint)(0, size);
 			}
 			
 		public:
@@ -2632,9 +2632,9 @@ public:
 			{
 				return !b._pointerFieldIsNull(0);
 			}
-			PrimitiveList!int.Reader getPrimitiveList()
+			PrimitiveList!uint.Reader getPrimitiveList()
 			{
-				return b._getPointerField!(PrimitiveList!int)(0, null, 0);
+				return b._getPointerField!(PrimitiveList!uint)(0, null, 0);
 			}
 			
 		public:
@@ -2718,7 +2718,7 @@ public:
 				assert(which() == TestUnion.Union1.Which.u1f0s0, "Must check which() before get()ing a union member.");
 				return Void.VOID;
 			}
-			void setU1f0s0(Void value)
+			void setU1f0s0()
 			{
 				b._setShortField(1, cast(ushort)TestUnion.Union1.Which.u1f0s0);
 			}
@@ -2940,7 +2940,7 @@ public:
 				assert(which() == TestUnion.Union1.Which.u1f2s0, "Must check which() before get()ing a union member.");
 				return Void.VOID;
 			}
-			void setU1f2s0(Void value)
+			void setU1f2s0()
 			{
 				b._setShortField(1, cast(ushort)TestUnion.Union1.Which.u1f2s0);
 			}
@@ -3985,7 +3985,7 @@ public:
 				{
 					return Void.VOID;
 				}
-				void setQuux(Void value)
+				void setQuux()
 				{
 				}
 				
@@ -4611,7 +4611,7 @@ public:
 			{
 				return Void.VOID;
 			}
-			void setF(Void value)
+			void setF()
 			{
 			}
 			
@@ -4983,7 +4983,7 @@ public:
 			{
 				return Void.VOID;
 			}
-			void setF(Void value)
+			void setF()
 			{
 			}
 			
@@ -5931,17 +5931,17 @@ public:
 			return b._initPointerField!(.TestGenerics!(Bar_b32d3ef2e630cc9e_Type, Foo_b32d3ef2e630cc9e_Type))(2, 0);
 		}
 		
-		.TestGenerics!(Text, PrimitiveList!byte).Builder getDub()
+		.TestGenerics!(Text, PrimitiveList!ubyte).Builder getDub()
 		{
-			return b._getPointerField!(.TestGenerics!(Text, PrimitiveList!byte))(3, null, 0);
+			return b._getPointerField!(.TestGenerics!(Text, PrimitiveList!ubyte))(3, null, 0);
 		}
 		void setDub(T)(T value)
 		{
-			b._setPointerField!(.TestGenerics!(Text, PrimitiveList!byte))(3, value);
+			b._setPointerField!(.TestGenerics!(Text, PrimitiveList!ubyte))(3, value);
 		}
-		.TestGenerics!(Text, PrimitiveList!byte).Builder initDub()
+		.TestGenerics!(Text, PrimitiveList!ubyte).Builder initDub()
 		{
-			return b._initPointerField!(.TestGenerics!(Text, PrimitiveList!byte))(3, 0);
+			return b._initPointerField!(.TestGenerics!(Text, PrimitiveList!ubyte))(3, 0);
 		}
 		
 	public:
@@ -5987,9 +5987,9 @@ public:
 		{
 			return !b._pointerFieldIsNull(3);
 		}
-		.TestGenerics!(Text, PrimitiveList!byte).Reader getDub()
+		.TestGenerics!(Text, PrimitiveList!ubyte).Reader getDub()
 		{
-			return b._getPointerField!(.TestGenerics!(Text, PrimitiveList!byte))(3, null, 0);
+			return b._getPointerField!(.TestGenerics!(Text, PrimitiveList!ubyte))(3, null, 0);
 		}
 		
 	public:
@@ -7148,10 +7148,10 @@ public:
 	static const int16ListConst = GeneratedClassSupport.Const!(PrimitiveList!short)(&Schemas.b_a855dfc33557b545, 28, 0x7fffffff);
 	static const int32ListConst = GeneratedClassSupport.Const!(PrimitiveList!int)(&Schemas.b_ea7a412cb73aeaf9, 28, 0x7fffffff);
 	static const int64ListConst = GeneratedClassSupport.Const!(PrimitiveList!long)(&Schemas.b_9c62a28ea479f4d6, 28, 0x7fffffff);
-	static const uint8ListConst = GeneratedClassSupport.Const!(PrimitiveList!byte)(&Schemas.b_ba6411c2fa3b0647, 28, 0x7fffffff);
-	static const uint16ListConst = GeneratedClassSupport.Const!(PrimitiveList!short)(&Schemas.b_dfe97451a88a9a9f, 29, 0x7fffffff);
-	static const uint32ListConst = GeneratedClassSupport.Const!(PrimitiveList!int)(&Schemas.b_f5a94c7841e8f5c0, 29, 0x7fffffff);
-	static const uint64ListConst = GeneratedClassSupport.Const!(PrimitiveList!long)(&Schemas.b_ec8636a9fa084372, 29, 0x7fffffff);
+	static const uint8ListConst = GeneratedClassSupport.Const!(PrimitiveList!ubyte)(&Schemas.b_ba6411c2fa3b0647, 28, 0x7fffffff);
+	static const uint16ListConst = GeneratedClassSupport.Const!(PrimitiveList!ushort)(&Schemas.b_dfe97451a88a9a9f, 29, 0x7fffffff);
+	static const uint32ListConst = GeneratedClassSupport.Const!(PrimitiveList!uint)(&Schemas.b_f5a94c7841e8f5c0, 29, 0x7fffffff);
+	static const uint64ListConst = GeneratedClassSupport.Const!(PrimitiveList!ulong)(&Schemas.b_ec8636a9fa084372, 29, 0x7fffffff);
 	static const float32ListConst = GeneratedClassSupport.Const!(PrimitiveList!float)(&Schemas.b_82df939abbe32952, 29, 0x7fffffff);
 	static const float64ListConst = GeneratedClassSupport.Const!(PrimitiveList!double)(&Schemas.b_8b96d4ad472f653c, 29, 0x7fffffff);
 	static const textListConst = GeneratedClassSupport.Const!(TextList)(&Schemas.b_bd1464b64f4fcf4b, 28, 0x7fffffff);

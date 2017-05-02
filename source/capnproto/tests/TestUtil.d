@@ -35,7 +35,7 @@ struct TestUtil
 	
 	static void initTestMessage(TestAllTypes.Builder builder)
 	{
-		builder.setVoidField(Void.VOID);
+		builder.setVoidField();
 		builder.setBoolField(true);
 		builder.setInt8Field(-123);
 		builder.setInt16Field(-12345);
@@ -52,7 +52,7 @@ struct TestUtil
 		
 		{
 			auto subBuilder = builder.initStructField();
-			subBuilder.setVoidField(Void.VOID);
+			subBuilder.setVoidField();
 			subBuilder.setBoolField(true);
 			subBuilder.setInt8Field(-12);
 			subBuilder.setInt16Field(3456);
