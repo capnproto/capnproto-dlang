@@ -666,7 +666,7 @@ private:
     auto discrimOffset = containingStruct.getProto().getStruct().getDiscriminantOffset();
 
     kj::String titleCase = toTitleCase(memberName);
-    kj::StringPtr upperCase = memberName;
+    kj::String upperCase = safeIdentifier(memberName);
 
     return DiscriminantChecks {
       kj::str(spaces(indent+1),
