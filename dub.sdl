@@ -12,7 +12,13 @@ configuration "lib" {
 configuration "test" {
 	targetName "test"
 	targetType "executable"
-	excludedSourceFiles "source/capnproto/benchmark/*" "source/capnproto/tests/*"
+	excludedSourceFiles "source/capnproto/benchmark/*" "source/capnproto/tests/*" "source/samples/mmap.d"
+}
+
+configuration "mmap" {
+	targetName "mmap"
+	targetType "executable"
+	excludedSourceFiles "source/capnproto/benchmark/*" "source/capnproto/tests/*" "source/samples/test.d"
 }
 
 configuration "benchmark-carsales" {
