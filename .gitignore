@@ -22,3 +22,11 @@ docs/
 
 # Code coverage
 *.lst
+
+*.bin
+dub.userprefs
+dub.selections.json
+/capnpc-dlang
+/benchmark-carsales
+/test
+/mmap
