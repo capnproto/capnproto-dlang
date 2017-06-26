@@ -19,25 +19,25 @@ void writeAddressBook()
 	
 	auto people = addressbook.initPeople(2);
 	
-	auto alice = people.get(0);
+	auto alice = people[0];
 	alice.setId(123);
 	alice.setName("Alice");
 	alice.setEmail("alice@example.com");
 	
 	auto alicePhones = alice.initPhones(1);
-	alicePhones.get(0).setNumber("555-1212");
-	alicePhones.get(0).setType(Person.PhoneNumber.Type.mobile);
+	alicePhones[0].setNumber("555-1212");
+	alicePhones[0].setType(Person.PhoneNumber.Type.mobile);
 	alice.getEmployment().setSchool("MIT");
 	
-	auto bob = people.get(1);
+	auto bob = people[1];
 	bob.setId(456);
 	bob.setName("Bob");
 	bob.setEmail("bob@example.com");
 	auto bobPhones = bob.initPhones(2);
-	bobPhones.get(0).setNumber("555-4567");
-	bobPhones.get(0).setType(Person.PhoneNumber.Type.home);
-	bobPhones.get(1).setNumber("555-7654");
-	bobPhones.get(1).setType(Person.PhoneNumber.Type.work);
+	bobPhones[0].setNumber("555-4567");
+	bobPhones[0].setType(Person.PhoneNumber.Type.home);
+	bobPhones[1].setNumber("555-7654");
+	bobPhones[1].setType(Person.PhoneNumber.Type.work);
 	bob.getEmployment().setUnemployed();
 	
 	SerializePacked.writeToUnbuffered(new FileDescriptor(stdout), message);
