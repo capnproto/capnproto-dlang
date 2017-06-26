@@ -2,7 +2,7 @@
 
 [![Dub version](https://img.shields.io/dub/v/capnproto-dlang.svg)](https://code.dlang.org/packages/capnproto-dlang)
 [![Dub downloads](https://img.shields.io/dub/dt/capnproto-dlang.svg)](https://code.dlang.org/packages/capnproto-dlang)
-[![Build Status](https://travis-ci.org/ThomasBrixLarsen/capnproto-dlang.svg?branch=master)](https://travis-ci.org/ThomasBrixLarsen/capnproto-dlang)
+[![Build Status](https://travis-ci.org/capnproto/capnproto-dlang.svg?branch=master)](https://travis-ci.org/capnproto/capnproto-dlang)
 
 [Cap'n Proto](http://capnproto.org) is an extremely efficient protocol for sharing data
 and capabilities, and capnproto-dlang is a pure D implementation.
@@ -10,7 +10,7 @@ and capabilities, and capnproto-dlang is a pure D implementation.
 # State
 
 * Passes Cap'n Proto testsuite.
-* Optimized. A little slower/faster than the official C++ implementation (see [benchmarks](#benchmarks)).
+* A little slower/faster than the official C++ implementation (see [benchmarks](#benchmarks)).
 * Missing RPC part of Cap'n Proto.
 * Missing JSON codec (workaround: capnp tool can convert to and from JSON).
 * Missing Cap'n Proto toString format (workaround: capnp tool can convert to and from text format).
@@ -53,7 +53,7 @@ void main()
 
 ## Sample
 
-A full example including pregenerated D code from schema is available [here](https://github.com/ThomasBrixLarsen/capnproto-dlang/tree/master/source/samples).
+A full example including pregenerated D code from schema is available [here](https://github.com/capnproto/capnproto-dlang/tree/master/source/samples).
 
 ```bash
 dub build -c sample-addressbook
