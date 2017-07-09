@@ -22,25 +22,25 @@ void writeAddressBook()
 	auto people = addressbook.initPeople(2);
 	
 	auto alice = people[0];
-	alice.id = 123;
-	alice.name = "Alice";
-    alice.email = "alice@example.com";
+	alice.setId(123);
+	alice.setName("Alice");
+	alice.setEmail("alice@example.com");
 	
 	auto alicePhones = alice.initPhones(1);
-	alicePhones[0].number = "555-1212";
-	alicePhones[0].type = Person.PhoneNumber.Type.mobile;
-	alice.employment.school = "MIT";
+	alicePhones[0].setNumber("555-1212");
+	alicePhones[0].setType(Person.PhoneNumber.Type.mobile);
+	alice.getEmployment().setSchool("MIT");
 	
 	auto bob = people[1];
-	bob.id = 456;
-	bob.name = "Bob";
-	bob.email = "bob@example.com";
+	bob.setId(456);
+	bob.setName("Bob");
+	bob.setEmail("bob@example.com");
 	auto bobPhones = bob.initPhones(2);
-	bobPhones[0].number = "555-4567";
-	bobPhones[0].type = Person.PhoneNumber.Type.home;
-	bobPhones[1].number = "555-7654";
-	bobPhones[1].type = Person.PhoneNumber.Type.work;
-	bob.employment.setUnemployed();
+	bobPhones[0].setNumber("555-4567");
+	bobPhones[0].setType(Person.PhoneNumber.Type.home);
+	bobPhones[1].setNumber("555-7654");
+	bobPhones[1].setType(Person.PhoneNumber.Type.work);
+	bob.getEmployment().setUnemployed();
 	
 	auto fd = new FileDescriptor(File("addressBookForMmap.bin", "w"));
 	Serialize.write(fd, message);
@@ -53,14 +53,14 @@ void printAddressBook()
 	
 	auto addressbook = message.getRoot!AddressBook;
 	
-	foreach(person; addressbook.people)
+	foreach(person; addressbook.getPeople())
 	{
-		writefln("%s: %s", person.name, person.email);
+		writefln("%s: %s", person.getName(), person.getEmail());
 		
-		foreach(phone; person.phones)
+		foreach(phone; person.getPhones())
 		{
 			string typeName = "UNKNOWN";
-			switch(phone.type) with(Person.PhoneNumber.Type)
+			switch(phone.getType()) with(Person.PhoneNumber.Type)
 			{
 				case mobile:
 					typeName = "mobile";
@@ -74,20 +74,20 @@ void printAddressBook()
 				default:
 					break;
 			}
-			writefln("  %s phone: %s", typeName, phone.number);
+			writefln("  %s phone: %s", typeName, phone.getNumber());
 		}
 		
-		auto employment = person.employment;
+		auto employment = person.getEmployment();
 		switch(employment.which()) with(Person.Employment.Which)
 		{
 			case unemployed:
 				writefln("  unemployed");
 				break;
 			case employer:
-				writefln("  employer: %s", employment.employer);
+				writefln("  employer: %s", employment.getEmployer());
 				break;
 			case school:
-				writefln("  student at: %s", employment.school);
+				writefln("  student at: %s", employment.getSchool());
 				break;
 			case selfEmployed:
 				writefln("  self-employed");
