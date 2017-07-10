@@ -816,7 +816,7 @@ private:
         return FieldText {
           kj::strTree(
             kj::mv(unionDiscrim.readerIsDef),
-            spaces(indent+1), "@property ", titleCase, ".Reader ", proto.getName(), "()\n", spaces(indent+1), "{\n",
+            spaces(indent+1), titleCase, ".Reader get", titleCase, "()\n", spaces(indent+1), "{\n",
             spaces(indent+2), "return ", scope, titleCase,
             ".Reader(b.segment, b.data, b.pointers, b.dataSize, b.pointerCount, b.nestingLimit);\n",
             spaces(indent+1), "}\n",
@@ -824,7 +824,7 @@ private:
 
             kj::strTree(
               kj::mv(unionDiscrim.builderIsDef),
-              spaces(indent+1), "@property ", titleCase, ".Builder ", proto.getName(), "()\n", spaces(indent+1), "{\n",
+              spaces(indent+1), titleCase, ".Builder get", titleCase, "()\n", spaces(indent+1), "{\n",
               spaces(indent+2), "return ", scope, titleCase,
               ".Builder(b.segment, b.data, b.pointers, b.dataSize, b.pointerCount);\n",
               spaces(indent+1), "}\n",
@@ -970,7 +970,7 @@ private:
       return FieldText {
         kj::strTree(
             kj::mv(unionDiscrim.readerIsDef),
-            spaces(indent+1), "@property ", readerType, " ", proto.getName(), "()\n", spaces(indent+1), "{\n",
+            spaces(indent+1), readerType, " get", titleCase, "()\n", spaces(indent+1), "{\n",
             unionDiscrim.check,
             (typeBody.which() == schema::Type::ENUM ?
              makeEnumGetter(field.getType().asEnum(),
@@ -983,7 +983,7 @@ private:
 
           kj::strTree(
             kj::mv(unionDiscrim.builderIsDef),
-            spaces(indent+1), "@property ", builderType, " ", proto.getName(), "()\n", spaces(indent+1), "{\n",
+            spaces(indent+1), builderType, " get", titleCase, "()\n", spaces(indent+1), "{\n",
             unionDiscrim.check,
             (typeBody.which() == schema::Type::ENUM ?
              makeEnumGetter(field.getType().asEnum(),
@@ -996,7 +996,7 @@ private:
             typeBody.which() == schema::Type::VOID?
             strTree(spaces(indent+1), "void set", titleCase, "()\n", spaces(indent+1), "{\n")
             :
-            strTree(spaces(indent+1), "@property void ", proto.getName(), "(", readerType, " value)\n", spaces(indent+1), "{\n"),
+            strTree(spaces(indent+1), "void set", titleCase, "(", readerType, " value)\n", spaces(indent+1), "{\n"),
             unionDiscrim.set,
             (typeBody.which() == schema::Type::ENUM ?
              kj::strTree(spaces(indent+2), "b._setShortField(", offset, ", cast(ushort)value", defaultMaskParam, ");\n") :
@@ -1023,7 +1023,7 @@ private:
             spaces(indent+2), "return !b._pointerFieldIsNull(", offset, ");\n",
             spaces(indent+1), "}\n",
 
-            spaces(indent+1), "@property ", readerType, ".Reader ", proto.getName(), "()\n", spaces(indent+1), "{\n",
+            spaces(indent+1), readerType, ".Reader get", titleCase, "()\n", spaces(indent+1), "{\n",
             unionDiscrim.check,
             spaces(indent+2), "return b._getPointerField!(", typeName(field.getType()), ")(", offset, ");\n",
             spaces(indent+1), "}\n",
@@ -1035,7 +1035,7 @@ private:
             spaces(indent+2), "return !b._pointerFieldIsNull(", offset, ");\n",
             spaces(indent+1), "}\n",
 
-            spaces(indent+1), "@property ", builderType, ".Builder ", proto.getName(), "()\n", spaces(indent+1), "{\n",
+            spaces(indent+1), builderType, ".Builder get", titleCase, "()\n", spaces(indent+1), "{\n",
             unionDiscrim.check,
             spaces(indent+2), "return b._getPointerField!(", typeName(field.getType()), ")(", offset, ");\n",
             spaces(indent+1), "}\n",
@@ -1051,7 +1051,7 @@ private:
             spaces(indent+1), "}\n",
 
             (field.getType().getBrandParameter() == nullptr ? kj::strTree() :
-             kj::strTree(spaces(indent+1), "@property void ", proto.getName(), "(", readerType, ".Reader value)\n", spaces(indent+1), "{\n",
+             kj::strTree(spaces(indent+1), "void set", titleCase, "(", readerType, ".Reader value)\n", spaces(indent+1), "{\n",
                          unionDiscrim.set,
                          spaces(indent+2), "b._setPointerField!(", typeName(field.getType()), ")(", offset, ", value);\n",
                          spaces(indent+1), "}\n",
@@ -1086,7 +1086,7 @@ private:
           spaces(indent+2), "return !b._pointerFieldIsNull(", offset, ");\n",
           spaces(indent+1), "}\n",
 
-          spaces(indent+1), "@property ", readerType, ".Reader ", proto.getName(), "()\n", spaces(indent+1), "{\n",
+          spaces(indent+1), readerType, ".Reader get", titleCase, "()\n", spaces(indent+1), "{\n",
           unionDiscrim.check,
           spaces(indent+2), "return ",
           "b._getPointerField!(", typeName(field.getType()), ")(", offset,", ", defaultParams, ");\n",
@@ -1095,7 +1095,7 @@ private:
 
         kj::strTree(
           kj::mv(unionDiscrim.builderIsDef),
-          spaces(indent+1), "@property ", builderType, ".Builder ", proto.getName(), "()\n", spaces(indent+1), "{\n",
+          spaces(indent+1), builderType, ".Builder get", titleCase, "()\n", spaces(indent+1), "{\n",
           unionDiscrim.check,
           spaces(indent+2), "return ",
           "b._getPointerField!(", builderType, ")(", offset, ", ", defaultParams, ");\n",
@@ -1103,14 +1103,14 @@ private:
 
           (isGeneric?
           kj::strTree(
-            spaces(indent+1), "@property void ", proto.getName(), "(T)(T value)\n", spaces(indent+1), "{\n",
+            spaces(indent+1), "void set", titleCase, "(T)(T value)\n", spaces(indent+1), "{\n",
             unionDiscrim.set,
             spaces(indent+2), "b._setPointerField!(", builderType, ")(", offset, ", value);\n",
             spaces(indent+1), "}\n"
           )
           :
           kj::strTree(
-            spaces(indent+1), "@property void ", proto.getName(), "(", readerType, ".Reader value)\n", spaces(indent+1), "{\n",
+            spaces(indent+1), "void set", titleCase, "(", readerType, ".Reader value)\n", spaces(indent+1), "{\n",
             unionDiscrim.set,
             spaces(indent+2), "b._setPointerField!(", builderType, ")(", offset, ", value);\n",
             spaces(indent+1), "}\n"
@@ -1141,8 +1141,8 @@ private:
           spaces(indent+2), "return !b._pointerFieldIsNull(", offset, ");\n",
           spaces(indent+1), "}\n",
 
-          spaces(indent+1), "@property ", setterInputType,
-          " ", proto.getName(), "()\n", spaces(indent+1), "{\n",
+          spaces(indent+1), setterInputType,
+          " get", titleCase, "()\n", spaces(indent+1), "{\n",
           spaces(indent+2), "return b._getPointerField!", blobKind, "(", offset, ", ", defaultParams, ")", (typeBody.which() == schema::Type::TEXT? ".toString()" : ".toArray()"), ";\n",
           spaces(indent+1), "}\n",
           spaces(indent+1), "\n"),
@@ -1153,14 +1153,14 @@ private:
           unionDiscrim.has,
           spaces(indent+2), "return !b._pointerFieldIsNull(", offset, ");\n",
           spaces(indent+1), "}\n",
-          spaces(indent+1), "@property ", builderType, ".Builder ", proto.getName(), "()\n", spaces(indent+1), "{\n",
+          spaces(indent+1), builderType, ".Builder get", titleCase, "()\n", spaces(indent+1), "{\n",
           spaces(indent+2), "return b._getPointerField!", blobKind, "(", offset, ", ", defaultParams, ");\n",
           spaces(indent+1), "}\n",
-          spaces(indent+1), "@property void ", proto.getName(), "(", readerType, ".Reader value)\n", spaces(indent+1), "{\n",
+          spaces(indent+1), "void set", titleCase, "(", readerType, ".Reader value)\n", spaces(indent+1), "{\n",
           unionDiscrim.set,
           spaces(indent+2), "b._setPointerField!", blobKind, "(", offset, ", value);\n",
           spaces(indent+1), "}\n",
-          spaces(indent+1), "@property void ", proto.getName(), "(", setterInputType, " value)\n", spaces(indent+1), "{\n",
+          spaces(indent+1), "void set", titleCase, "(", setterInputType, " value)\n", spaces(indent+1), "{\n",
           unionDiscrim.set,
           spaces(indent+2), "b._setPointerField!", blobKind, "(", offset, ", ",
           readerType, ".Reader(value));\n",
@@ -1186,8 +1186,8 @@ private:
             spaces(indent+1), "}\n",
 
              kj::strTree(
-               spaces(indent+1), "@property ", readerType,
-               ".Reader ", proto.getName(), "()\n", spaces(indent+1), "{\n",
+               spaces(indent+1), readerType,
+               ".Reader get", titleCase, "()\n", spaces(indent+1), "{\n",
                spaces(indent+2), "return ", kj::str("b._getPointerField!(", typeName(field.getType())), ")(", offset, ", ", defaultParams, ");\n",
                spaces(indent+1), "}\n"
             ),
@@ -1200,14 +1200,14 @@ private:
             spaces(indent+1), "}\n",
 
             kj::strTree(
-               spaces(indent+1), "@property ", builderType,
-               ".Builder ", proto.getName(), "()\n", spaces(indent+1), "{\n",
+               spaces(indent+1), builderType,
+               ".Builder get", titleCase, "()\n", spaces(indent+1), "{\n",
                spaces(indent+2), "return ", kj::str("b._getPointerField!(", typeName(field.getType())), ")(", offset, ", ", defaultParams, ");\n",
                spaces(indent+1), "}\n"
             ),
 
             kj::strTree(
-               spaces(indent+1), "@property void ", proto.getName(), "(", readerType, ".Reader value)\n", spaces(indent+1), "{\n",
+               spaces(indent+1), "void set", titleCase, "(", readerType, ".Reader value)\n", spaces(indent+1), "{\n",
                unionDiscrim.set,
                spaces(indent+2), kj::str("b._setPointerField!(", typeName(field.getType())), ")(", offset, ", value);\n",
                spaces(indent+1), "}\n"
