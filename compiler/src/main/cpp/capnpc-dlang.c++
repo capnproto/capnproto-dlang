@@ -153,16 +153,17 @@ kj::String safeIdentifier(kj::StringPtr identifier) {
   // If the identifier is a keyword, this adds an underscore to the end.
 
   static const std::set<kj::StringPtr> keywords({
-    "alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor", "bool", "break",
-    "case", "catch", "char", "char16_t", "char32_t", "class", "compl", "const", "constexpr",
-    "const_cast", "continue", "decltype", "default", "delete", "do", "double", "dynamic_cast",
-    "else", "enum", "explicit", "export", "extern", "false", "float", "for", "friend", "goto",
-    "if", "inline", "int", "long", "mutable", "namespace", "new", "noexcept", "not", "not_eq",
-    "nullptr", "operator", "or", "or_eq", "package", "private", "protected", "public", "register",
-    "reinterpret_cast", "return", "short", "signed", "sizeof", "static", "static_assert",
-    "static_cast", "struct", "switch", "template", "this", "thread_local", "throw", "true",
-    "try", "typedef", "typeid", "typename", "union", "unsigned", "using", "version", "virtual", "void",
-    "volatile", "wchar_t", "while", "xor", "xor_eq"
+    "abstract", "alias", "align", "asm", "assert", "auto", "body", "bool", "break", "byte",
+    "case", "cast", "catch", "cdouble", "cent", "cfloat", "char", "class", "const", "continue", "creal",
+    "dchar", "debug", "default", "delegate", "delete", "deprecated", "do", "double",
+    "else", "enum", "export", "extern", "false", "final", "finally", "float", "for", "foreach", "foreach_reverse", "function",
+    "goto", "idouble", "if", "ifloat", "immutable", "import", "in", "inout", "int", "interface", "invariant", "ireal", "is",
+    "lazy", "long", "macro", "mixin", "module", "new", "nothrow", "null",
+    "out", "override", "package", "pragma", "private", "protected", "public", "pure",
+    "real", "ref", "return", "scope", "shared", "short", "static",
+    "struct", "super", "switch", "synchronized", "template", "this", "throw", "true",
+    "try", "typedef", "typeid", "typeof", "ubyte", "ucent", "uint", "ulong", "union", "unittest", "ushort",
+    "version", "void", "volatile", "wchar", "while", "with"
   });
 
   if (keywords.count(identifier) > 0) {
