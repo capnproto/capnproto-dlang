@@ -1067,7 +1067,7 @@ private:
                          spaces(indent+1), "}\n",
                          spaces(indent+1), "alias set", titleCase, " = ", proto.getName(), ";\n",
                          spaces(indent+1), "\n"))
-            ),
+        ),
       };
 
     } else if (kind == FieldKind::STRUCT) {

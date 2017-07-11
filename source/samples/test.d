@@ -26,7 +26,7 @@ void writeAddressBook()
        ... or get/set methods like C++ capnproto interface ...
     */
 	alice.setName("Alice");
-    alice.email = "alice@example.com";
+	alice.email = "alice@example.com";
 	
 	auto alicePhones = alice.initPhones(1);
 	alicePhones[0].number = "555-1212";

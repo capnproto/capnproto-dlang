@@ -24,7 +24,7 @@ void writeAddressBook()
 	auto alice = people[0];
 	alice.id = 123;
 	alice.name = "Alice";
-    alice.email = "alice@example.com";
+	alice.email = "alice@example.com";
 	
 	auto alicePhones = alice.initPhones(1);
 	alicePhones[0].number = "555-1212";
