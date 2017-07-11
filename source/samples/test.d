@@ -21,7 +21,11 @@ void writeAddressBook()
 	
 	auto alice = people[0];
 	alice.id = 123;
+    /* you can use dlang style property access ...
 	alice.name = "Alice";
+       ... or get/set methods like C++ capnproto interface ...
+    */
+	alice.setName("Alice");
     alice.email = "alice@example.com";
 	
 	auto alicePhones = alice.initPhones(1);

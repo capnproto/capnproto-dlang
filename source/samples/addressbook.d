@@ -28,10 +28,13 @@ public:
 		{
 			return b._getUintField(0);
 		}
+		alias getId = id;
+		
 		@property void id(uint value)
 		{
 			b._setUintField(0, value);
 		}
+		alias setId = id;
 		
 		bool hasName()
 		{
@@ -41,6 +44,8 @@ public:
 		{
 			return b._getPointerField!Text(0, null, 0, 0);
 		}
+		alias getName = name;
+		
 		@property void name(Text.Reader value)
 		{
 			b._setPointerField!Text(0, value);
@@ -49,6 +54,8 @@ public:
 		{
 			b._setPointerField!Text(0, Text.Reader(value));
 		}
+		alias setName = name;
+		
 		Text.Builder initName(int size)
 		{
 			return b._initPointerField!Text(0, size);
@@ -62,6 +69,8 @@ public:
 		{
 			return b._getPointerField!Text(1, null, 0, 0);
 		}
+		alias getEmail = email;
+		
 		@property void email(Text.Reader value)
 		{
 			b._setPointerField!Text(1, value);
@@ -70,6 +79,8 @@ public:
 		{
 			b._setPointerField!Text(1, Text.Reader(value));
 		}
+		alias setEmail = email;
+		
 		Text.Builder initEmail(int size)
 		{
 			return b._initPointerField!Text(1, size);
@@ -87,6 +98,8 @@ public:
 		{
 			b._setPointerField!(StructList!(.Person.PhoneNumber))(2, value);
 		}
+		alias setPhones = phones;
+		
 		StructList!(.Person.PhoneNumber).Builder initPhones(int size)
 		{
 			return b._initPointerField!(StructList!(.Person.PhoneNumber))(2, size);
@@ -96,6 +109,8 @@ public:
 		{
 			return Person.Employment.Builder(b.segment, b.data, b.pointers, b.dataSize, b.pointerCount);
 		}
+		alias setEmployment = employment;
+		
 		Employment.Builder initEmployment()
 		{
 			b._setUshortField(2, cast(ushort)0);
@@ -119,6 +134,7 @@ public:
 		{
 			return b._getUintField(0);
 		}
+		alias getId = id;
 		
 		bool hasName()
 		{
@@ -128,6 +144,7 @@ public:
 		{
 			return b._getPointerField!Text(0, null, 0, 0).toString();
 		}
+		alias getName = name;
 		
 		bool hasEmail()
 		{
@@ -137,6 +154,7 @@ public:
 		{
 			return b._getPointerField!Text(1, null, 0, 0).toString();
 		}
+		alias getEmail = email;
 		
 		bool hasPhones()
 		{
@@ -146,11 +164,13 @@ public:
 		{
 			return b._getPointerField!(StructList!(.Person.PhoneNumber))(2, null, 0);
 		}
+		alias getPhones = phones;
 		
 		@property Employment.Reader employment()
 		{
 			return Person.Employment.Reader(b.segment, b.data, b.pointers, b.dataSize, b.pointerCount, b.nestingLimit);
 		}
+		alias getEmployment = employment;
 		
 	public:
 		StructReader b;
@@ -183,6 +203,8 @@ public:
 			{
 				return b._getPointerField!Text(0, null, 0, 0);
 			}
+			alias getNumber = number;
+			
 			@property void number(Text.Reader value)
 			{
 				b._setPointerField!Text(0, value);
@@ -191,6 +213,8 @@ public:
 			{
 				b._setPointerField!Text(0, Text.Reader(value));
 			}
+			alias setNumber = number;
+			
 			Text.Builder initNumber(int size)
 			{
 				return b._initPointerField!Text(0, size);
@@ -206,10 +230,13 @@ public:
 					default: return .Person.PhoneNumber.Type._NOT_IN_SCHEMA;
 				}
 			}
+			alias getType = type;
+			
 			@property void type(.Person.PhoneNumber.Type value)
 			{
 				b._setShortField(0, cast(ushort)value);
 			}
+			alias setType = type;
 			
 		public:
 			StructBuilder b;
@@ -231,6 +258,7 @@ public:
 			{
 				return b._getPointerField!Text(0, null, 0, 0).toString();
 			}
+			alias getNumber = number;
 			
 			@property .Person.PhoneNumber.Type type()
 			{
@@ -242,6 +270,7 @@ public:
 					default: return .Person.PhoneNumber.Type._NOT_IN_SCHEMA;
 				}
 			}
+			alias getType = type;
 			
 		public:
 			StructReader b;
@@ -297,6 +326,8 @@ public:
 				assert(which() == Person.Employment.Which.unemployed, "Must check which() before get()ing a union member.");
 				return Void.VOID;
 			}
+			alias getUnemployed = unemployed;
+			
 			void setUnemployed()
 			{
 				b._setShortField(2, cast(ushort)Person.Employment.Which.unemployed);
@@ -315,6 +346,8 @@ public:
 			{
 				return b._getPointerField!Text(3, null, 0, 0);
 			}
+			alias getEmployer = employer;
+			
 			@property void employer(Text.Reader value)
 			{
 				b._setShortField(2, cast(ushort)Person.Employment.Which.employer);
@@ -325,6 +358,8 @@ public:
 				b._setShortField(2, cast(ushort)Person.Employment.Which.employer);
 				b._setPointerField!Text(3, Text.Reader(value));
 			}
+			alias setEmployer = employer;
+			
 			Text.Builder initEmployer(int size)
 			{
 				b._setShortField(2, cast(ushort)Person.Employment.Which.employer);
@@ -344,6 +379,8 @@ public:
 			{
 				return b._getPointerField!Text(3, null, 0, 0);
 			}
+			alias getSchool = school;
+			
 			@property void school(Text.Reader value)
 			{
 				b._setShortField(2, cast(ushort)Person.Employment.Which.school);
@@ -354,6 +391,8 @@ public:
 				b._setShortField(2, cast(ushort)Person.Employment.Which.school);
 				b._setPointerField!Text(3, Text.Reader(value));
 			}
+			alias setSchool = school;
+			
 			Text.Builder initSchool(int size)
 			{
 				b._setShortField(2, cast(ushort)Person.Employment.Which.school);
@@ -369,6 +408,8 @@ public:
 				assert(which() == Person.Employment.Which.selfEmployed, "Must check which() before get()ing a union member.");
 				return Void.VOID;
 			}
+			alias getSelfEmployed = selfEmployed;
+			
 			void setSelfEmployed()
 			{
 				b._setShortField(2, cast(ushort)Person.Employment.Which.selfEmployed);
@@ -407,6 +448,7 @@ public:
 				assert(which() == Person.Employment.Which.unemployed, "Must check which() before get()ing a union member.");
 				return Void.VOID;
 			}
+			alias getUnemployed = unemployed;
 			
 			bool isEmployer()
 			{
@@ -421,6 +463,7 @@ public:
 			{
 				return b._getPointerField!Text(3, null, 0, 0).toString();
 			}
+			alias getEmployer = employer;
 			
 			bool isSchool()
 			{
@@ -435,6 +478,7 @@ public:
 			{
 				return b._getPointerField!Text(3, null, 0, 0).toString();
 			}
+			alias getSchool = school;
 			
 			bool isSelfEmployed()
 			{
@@ -445,6 +489,7 @@ public:
 				assert(which() == Person.Employment.Which.selfEmployed, "Must check which() before get()ing a union member.");
 				return Void.VOID;
 			}
+			alias getSelfEmployed = selfEmployed;
 			
 		public:
 			StructReader b;
@@ -493,6 +538,8 @@ public:
 		{
 			b._setPointerField!(StructList!(.Person))(0, value);
 		}
+		alias setPeople = people;
+		
 		StructList!(.Person).Builder initPeople(int size)
 		{
 			return b._initPointerField!(StructList!(.Person))(0, size);
@@ -518,6 +565,7 @@ public:
 		{
 			return b._getPointerField!(StructList!(.Person))(0, null, 0);
 		}
+		alias getPeople = people;
 		
 	public:
 		StructReader b;
