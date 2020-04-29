@@ -8,7 +8,7 @@ CAPNP_CXX_FLAGS=-I $(CAPNP_PREFIX)/include -L $(CAPNP_PREFIX)/lib -lkj -lcapnp
 endif
 
 CXX=g++
-CXX_FLAGS=-std=c++11 $(CAPNP_CXX_FLAGS)
+CXX_FLAGS=-std=c++14 $(CAPNP_CXX_FLAGS)
 
 CAPNPC_DLANG_SOURCES=compiler/src/main/cpp/capnpc-dlang.c++
 
